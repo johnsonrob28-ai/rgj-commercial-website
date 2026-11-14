@@ -3,3 +3,5 @@
 .contact-details .contact-brand .brand-initials{display:inline-block;font-size:1em;margin-right:.15em}
 
 .contact-hero h1 .brand-initials{display:inline-block;font-size:1em;margin-right:.08em}
+
+.contact-panel .address-help{font-size:11px;line-height:1.6;margin:7px 0 0;color:var(--slate)}.contact-panel input[type="date"]{min-height:46px;width:100%;color:var(--charcoal);color-scheme:light}

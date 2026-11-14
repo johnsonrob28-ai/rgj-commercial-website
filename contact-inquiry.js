@@ -31,14 +31,14 @@ try {
       return;
     }
     if (!prefilled) {prefilled = true; prefill(s.form); s = store.getState();}
-    const fields = s.form.fields.filter(f => !s.form.steps.length || f.stepId === s.form.steps[s.step].id);
+    const fields = s.form.fields.filter(f => f.target !== 'budget' && (!s.form.steps.length || f.stepId === s.form.steps[s.step].id));
     const key = JSON.stringify(fields);
     if (key !== signature) {
       signature = key;
       formEl.innerHTML = fields.map(f => {
         const id = 'signup-'+f.target;
         const attrs = ' id="'+esc(id)+'" name="'+esc(f.target)+'"'+(f.required?' required':'')+(f.readOnly?' disabled':'')+' aria-describedby="'+esc(id)+'-error"';
-        const brandLabels = {transaction: 'How can we help?', message: 'Tell us about your plans'};
+        const brandLabels = {transaction: 'How can we help?', message: 'Tell us about your plans', location: 'Address', timing: 'Target Occupancy Date'};
         const label = esc(brandLabels[f.target] || f.label)+(f.required?' *':'');
         let control;
         if (f.control === 'checkbox') control='<label class="consent-label" for="'+esc(id)+'"><input type="checkbox"'+attrs+'><span>'+label+'</span></label>';
@@ -46,6 +46,8 @@ try {
           control='<label for="'+esc(id)+'">'+label+'</label>';
           if (f.control === 'select') control+='<select'+attrs+'><option value="">Please select</option>'+f.choices.map(c=>'<option value="'+esc(c.value)+'">'+esc(c.label)+'</option>').join('')+'</select>';
           else if (f.control === 'textarea') control+='<textarea'+attrs+'></textarea>';
+          else if (f.target === 'location') control+='<input type="text"'+attrs+' autocomplete="street-address" list="address-suggestions" placeholder="Start typing an address"><datalist id="address-suggestions"></datalist><p class="address-help">Choose a suggestion or enter your address manually.</p>';
+          else if (f.target === 'timing') control+='<input type="date"'+attrs+'>';
           else if (['text','email','phone','url','number','date'].includes(f.control)) control+='<input type="'+(f.control==='phone'?'tel':f.control)+'"'+attrs+' placeholder="'+esc(f.placeholder || '')+'">';
           else control+='<p>This field needs assistance. Please email us using the address below.</p>';
         }
@@ -81,6 +83,8 @@ try {
   formEl.addEventListener('submit', e => store.submit(e));
   store.subscribe(render);
   render(store.getState());
+  const { enableAddressSuggestions } = await import('./address-suggestions.js');
+  enableAddressSuggestions(formEl);
   store.start();
 } catch (error) {
   console.error('Contact inquiry form unavailable', error);

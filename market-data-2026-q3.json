@@ -165,6 +165,136 @@
       "area": "Caledon",
       "submarket": "Caledon",
       "averageSalePsf": 235.94
+    },
+    {
+      "area": "Halton Hills",
+      "submarket": "Halton Hills",
+      "averageSalePsf": 121
+    },
+    {
+      "area": "Ajax",
+      "submarket": "Ajax",
+      "averageSalePsf": 239.29
+    },
+    {
+      "area": "Oshawa",
+      "submarket": "Oshawa",
+      "averageSalePsf": 479.89
+    },
+    {
+      "area": "Whitby",
+      "submarket": "Whitby",
+      "averageSalePsf": 231.61
+    },
+    {
+      "area": "Aurora",
+      "submarket": "Aurora",
+      "averageSalePsf": 289.76
+    },
+    {
+      "area": "Markham",
+      "submarket": "East",
+      "averageSalePsf": 290.22
+    },
+    {
+      "area": "Newmarket",
+      "submarket": "Newmarket",
+      "averageSalePsf": 336.08
+    },
+    {
+      "area": "Richmond Hill",
+      "submarket": "Richmond Hill",
+      "averageSalePsf": 420.58
+    },
+    {
+      "area": "Whitchurch-Stouffville",
+      "submarket": "Whitchurch/Stouffville",
+      "averageSalePsf": 510.54
+    },
+    {
+      "area": "Toronto",
+      "submarket": "Downsview",
+      "averageSalePsf": 398.79
+    },
+    {
+      "area": "Toronto",
+      "submarket": "East York",
+      "averageSalePsf": 359.56
+    },
+    {
+      "area": "Toronto",
+      "submarket": "North Etobicoke",
+      "averageSalePsf": 327.37
+    },
+    {
+      "area": "Toronto",
+      "submarket": "North York South",
+      "averageSalePsf": 266.41
+    },
+    {
+      "area": "Toronto",
+      "submarket": "Scarborough East",
+      "averageSalePsf": 400.85
+    },
+    {
+      "area": "Toronto",
+      "submarket": "Scarborough South",
+      "averageSalePsf": 285.37
+    },
+    {
+      "area": "Toronto",
+      "submarket": "Scarborough West",
+      "averageSalePsf": 279.42
+    },
+    {
+      "area": "Toronto",
+      "submarket": "South Etobicoke",
+      "averageSalePsf": 419.93
+    },
+    {
+      "area": "Toronto",
+      "submarket": "Weston",
+      "averageSalePsf": 447.41
+    },
+    {
+      "area": "Toronto",
+      "submarket": "Willowdale",
+      "averageSalePsf": 442.5
+    },
+    {
+      "area": "North York",
+      "submarket": "Downsview",
+      "averageSalePsf": 398.79
+    },
+    {
+      "area": "North York",
+      "submarket": "North York South",
+      "averageSalePsf": 266.41
+    },
+    {
+      "area": "Scarborough",
+      "submarket": "Scarborough East",
+      "averageSalePsf": 400.85
+    },
+    {
+      "area": "Scarborough",
+      "submarket": "Scarborough South",
+      "averageSalePsf": 285.37
+    },
+    {
+      "area": "Scarborough",
+      "submarket": "Scarborough West",
+      "averageSalePsf": 279.42
+    },
+    {
+      "area": "North York",
+      "submarket": "Willowdale",
+      "averageSalePsf": 442.5
+    },
+    {
+      "area": "Hamilton",
+      "submarket": "Greater Hamilton Area",
+      "averageSalePsf": 226.42
     }
   ],
   "cityMarkets": [
@@ -286,16 +416,395 @@
       "rent": 16.49,
       "availability": 4.4,
       "vacancy": 3
+    },
+    {
+      "city": "Halton Hills",
+      "name": "Halton Hills",
+      "rent": 15.67,
+      "availability": 2.6,
+      "vacancy": 1.8
+    },
+    {
+      "city": "Ajax",
+      "name": "Ajax",
+      "rent": 16.01,
+      "availability": 9.2,
+      "vacancy": 8.2
+    },
+    {
+      "city": "Oshawa",
+      "name": "Oshawa",
+      "rent": 10.56,
+      "availability": 1.9,
+      "vacancy": 0
+    },
+    {
+      "city": "Pickering",
+      "name": "Pickering",
+      "rent": 15.42,
+      "availability": 7.8,
+      "vacancy": 3.5
+    },
+    {
+      "city": "Whitby",
+      "name": "Whitby",
+      "rent": 14.57,
+      "availability": 9.9,
+      "vacancy": 8
+    },
+    {
+      "city": "Aurora",
+      "name": "Aurora",
+      "rent": 16.52,
+      "availability": 5.2,
+      "vacancy": 2.8
+    },
+    {
+      "city": "Markham",
+      "name": "East",
+      "rent": 17.63,
+      "availability": 3.7,
+      "vacancy": 3
+    },
+    {
+      "city": "Markham",
+      "name": "West",
+      "rent": 16.75,
+      "availability": 3,
+      "vacancy": 3
+    },
+    {
+      "city": "Newmarket",
+      "name": "Newmarket",
+      "rent": 18.07,
+      "availability": 4.8,
+      "vacancy": 3.3
+    },
+    {
+      "city": "Richmond Hill",
+      "name": "Richmond Hill",
+      "rent": 16.54,
+      "availability": 3.5,
+      "vacancy": 0.7
+    },
+    {
+      "city": "Whitchurch-Stouffville",
+      "name": "Whitchurch/Stouffville",
+      "rent": 15.2,
+      "availability": 6.9,
+      "vacancy": 0
+    },
+    {
+      "city": "Toronto",
+      "name": "Don Mills",
+      "rent": 12.07,
+      "availability": 1.8,
+      "vacancy": 1.8
+    },
+    {
+      "city": "Toronto",
+      "name": "Downsview",
+      "rent": 14.9,
+      "availability": 2.2,
+      "vacancy": 0.9
+    },
+    {
+      "city": "Toronto",
+      "name": "East York",
+      "rent": 15.52,
+      "availability": 3.9,
+      "vacancy": 1.9
+    },
+    {
+      "city": "Toronto",
+      "name": "North Etobicoke",
+      "rent": 13.66,
+      "availability": 5.6,
+      "vacancy": 2.7
+    },
+    {
+      "city": "Toronto",
+      "name": "North York South",
+      "rent": 14.46,
+      "availability": 2.9,
+      "vacancy": 0.8
+    },
+    {
+      "city": "Toronto",
+      "name": "Scarborough East",
+      "rent": 16.24,
+      "availability": 3.1,
+      "vacancy": 1.4
+    },
+    {
+      "city": "Toronto",
+      "name": "Scarborough South",
+      "rent": 13.73,
+      "availability": 5.5,
+      "vacancy": 4
+    },
+    {
+      "city": "Toronto",
+      "name": "Scarborough West",
+      "rent": 17.17,
+      "availability": 0.9,
+      "vacancy": 0.4
+    },
+    {
+      "city": "Toronto",
+      "name": "South Etobicoke",
+      "rent": 15.55,
+      "availability": 3.6,
+      "vacancy": 2.8
+    },
+    {
+      "city": "Toronto",
+      "name": "Toronto (publisher submarket)",
+      "rent": 10.85,
+      "availability": 0.7,
+      "vacancy": 0.2
+    },
+    {
+      "city": "Toronto",
+      "name": "Weston",
+      "rent": 16,
+      "availability": 3.2,
+      "vacancy": 1.2
+    },
+    {
+      "city": "Toronto",
+      "name": "Willowdale",
+      "rent": 17.5,
+      "availability": 0.6,
+      "vacancy": 0
+    },
+    {
+      "city": "Toronto",
+      "name": "York",
+      "rent": 14.75,
+      "availability": 0.3,
+      "vacancy": 0.3
+    },
+    {
+      "city": "North York",
+      "name": "Don Mills",
+      "rent": 12.07,
+      "availability": 1.8,
+      "vacancy": 1.8
+    },
+    {
+      "city": "North York",
+      "name": "Downsview",
+      "rent": 14.9,
+      "availability": 2.2,
+      "vacancy": 0.9
+    },
+    {
+      "city": "North York",
+      "name": "North York South",
+      "rent": 14.46,
+      "availability": 2.9,
+      "vacancy": 0.8
+    },
+    {
+      "city": "Scarborough",
+      "name": "Scarborough East",
+      "rent": 16.24,
+      "availability": 3.1,
+      "vacancy": 1.4
+    },
+    {
+      "city": "Scarborough",
+      "name": "Scarborough South",
+      "rent": 13.73,
+      "availability": 5.5,
+      "vacancy": 4
+    },
+    {
+      "city": "Scarborough",
+      "name": "Scarborough West",
+      "rent": 17.17,
+      "availability": 0.9,
+      "vacancy": 0.4
+    },
+    {
+      "city": "North York",
+      "name": "Willowdale",
+      "rent": 17.5,
+      "availability": 0.6,
+      "vacancy": 0
+    },
+    {
+      "city": "Hamilton",
+      "name": "Greater Hamilton Area",
+      "rent": 13.78,
+      "availability": 3.3,
+      "vacancy": 2.4
     }
   ],
   "reportCities": [
+    "Toronto",
+    "Etobicoke",
+    "North York",
+    "Scarborough",
     "Mississauga",
     "Brampton",
+    "Caledon",
     "Oakville",
-    "Etobicoke",
     "Burlington",
-    "Vaughan",
     "Milton",
-    "Caledon"
-  ]
+    "Halton Hills",
+    "Vaughan",
+    "Markham",
+    "Richmond Hill",
+    "Aurora",
+    "Newmarket",
+    "Whitchurch-Stouffville",
+    "King",
+    "East Gwillimbury",
+    "Georgina",
+    "Pickering",
+    "Ajax",
+    "Whitby",
+    "Oshawa",
+    "Clarington",
+    "Uxbridge",
+    "Scugog",
+    "Brock",
+    "Hamilton",
+    "Kitchener",
+    "Waterloo",
+    "Cambridge",
+    "Guelph",
+    "Brantford",
+    "Stratford",
+    "Barrie",
+    "Bradford West Gwillimbury",
+    "Innisfil",
+    "New Tecumseth",
+    "Orangeville"
+  ],
+  "surroundingSource": {
+    "publisher": "CBRE",
+    "title": "Waterloo Region Industrial Figures Q3 2026",
+    "quarter": "Q3 2026",
+    "published": "2026-10-13",
+    "url": "https://www.cbre.ca/insights/figures/waterloo-region-industrial-figure-q3-2026",
+    "pdf": "https://mktgdocs.cbre.com/2299/fd328b89-2ec5-4f10-879c-4883a63e43b6-959530862/Waterloo_Region_Industrial_Fig.pdf",
+    "page": 3,
+    "verifiedOn": "2026-11-14"
+  },
+  "surroundingMarkets": [
+    {
+      "city": "Kitchener",
+      "name": "Kitchener",
+      "rent": 12.86,
+      "availability": 5.8,
+      "vacancy": 2.2,
+      "askingSalePsf": 296.94
+    },
+    {
+      "city": "Waterloo",
+      "name": "Waterloo",
+      "rent": 12.29,
+      "availability": 7.9,
+      "vacancy": 0.6,
+      "askingSalePsf": 293.19
+    },
+    {
+      "city": "Cambridge",
+      "name": "Cambridge",
+      "rent": 13.32,
+      "availability": 8.4,
+      "vacancy": 5.1,
+      "askingSalePsf": 293.17
+    },
+    {
+      "city": "Guelph",
+      "name": "Guelph",
+      "rent": 14.09,
+      "availability": 6.5,
+      "vacancy": 3.4,
+      "askingSalePsf": 256.93
+    },
+    {
+      "city": "Brantford",
+      "name": "Brantford",
+      "rent": 11.44,
+      "availability": 4.4,
+      "vacancy": 1.6,
+      "askingSalePsf": 136.31
+    },
+    {
+      "city": "Stratford",
+      "name": "Stratford",
+      "rent": 9.23,
+      "availability": 2,
+      "vacancy": 0,
+      "askingSalePsf": 144.06
+    }
+  ],
+  "marketGroups": {
+    "Toronto": [
+      "Toronto",
+      "Etobicoke",
+      "North York",
+      "Scarborough"
+    ],
+    "Peel": [
+      "Mississauga",
+      "Brampton",
+      "Caledon"
+    ],
+    "Halton": [
+      "Oakville",
+      "Burlington",
+      "Milton",
+      "Halton Hills"
+    ],
+    "York": [
+      "Vaughan",
+      "Markham",
+      "Richmond Hill",
+      "Aurora",
+      "Newmarket",
+      "Whitchurch-Stouffville",
+      "King",
+      "East Gwillimbury",
+      "Georgina"
+    ],
+    "Durham": [
+      "Pickering",
+      "Ajax",
+      "Whitby",
+      "Oshawa",
+      "Clarington",
+      "Uxbridge",
+      "Scugog",
+      "Brock"
+    ],
+    "Surrounding areas": [
+      "Hamilton",
+      "Kitchener",
+      "Waterloo",
+      "Cambridge",
+      "Guelph",
+      "Brantford",
+      "Stratford",
+      "Barrie",
+      "Bradford West Gwillimbury",
+      "Innisfil",
+      "New Tecumseth",
+      "Orangeville"
+    ]
+  },
+  "coverageVerifiedOn": "2026-11-14",
+  "marketNotes": {
+    "Toronto": "These published submarkets cover different parts of the city. The row labelled Toronto is the publisher\u2019s narrower submarket, not a citywide average. Toronto district sections below repeat their relevant submarkets for easier browsing.",
+    "Etobicoke": "A Toronto district, shown separately for local property searches. North and South are the publisher\u2019s submarkets.",
+    "North York": "A Toronto district. Selected published submarkets are shown separately; these figures do not create a district-wide average.",
+    "Scarborough": "A Toronto district. East, South and West retain the publisher\u2019s reporting boundaries.",
+    "Markham": "East and West Markham are distinct reporting submarkets. Missing sale-price values are unavailable, not zero.",
+    "Hamilton": "Figures are for the publisher\u2019s Greater Hamilton Area reporting market. They are not a Hamilton-city-only estimate."
+  }
 }

@@ -1,0 +1,6 @@
+const search=document.querySelector('#market-search'),region=document.querySelector('#market-region');
+function apply(){const q=search.value.trim().toLowerCase(),g=region.value;let count=0;document.querySelectorAll('details[data-market]').forEach(el=>{el.hidden=!(el.dataset.market.includes(q)&&(!g||el.dataset.region===g));if(!el.hidden)count++;});document.querySelectorAll('[data-group]').forEach(el=>el.hidden=!Array.from(el.querySelectorAll('details[data-market]')).some(x=>!x.hidden));document.querySelector('#market-result-count').textContent=count+' matching places';}
+search?.addEventListener('input',apply);region?.addEventListener('change',apply);
+function openHash(){const target=document.getElementById(location.hash.slice(1));if(target?.matches('details[data-market]')){search.value='';region.value='';apply();target.open=true;target.scrollIntoView({block:'start'});}}
+window.addEventListener('hashchange',openHash);openHash();
+let printState=[];window.addEventListener('beforeprint',()=>{printState=Array.from(document.querySelectorAll('details.city-report'),el=>[el,el.open]);printState.forEach(([el])=>el.open=true);});window.addEventListener('afterprint',()=>printState.forEach(([el,open])=>el.open=open));

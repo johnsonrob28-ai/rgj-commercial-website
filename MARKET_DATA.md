@@ -28,3 +28,11 @@ The site remains a pre-launch GitHub Pages preview, noindex. Final domain, produ
 - Current verified sender: Robert Johnson, Sales Representative, Lennard Commercial Realty, Brokerage; rjohnson@lennard.com; 209-1 Yorkdale Road, Toronto ON M6A 3A1. Source: https://www.lennard.com/people/robert-johnson and https://www.lennard.com/contact (checked Nov 14 2026).
 - Email distribution is NOT configured. Prepare a campaign draft only. Before any campaign, configure/verify sender and sending platform, include functional unsubscribe and sender address, exclude suppressed contacts, process withdrawal requests and obtain explicit send authorization. Do not invent account capability or send via unrelated third parties.
 - Consent is specific to quarterly reports. Brokerage changes require reviewing sender identification, data permissions and consent scope; do not silently transfer records.
+
+## Expanded coverage and contact inquiries (November 14, 2026)
+- marketGroups is the complete coverage registry: all 25 GTA municipalities plus Toronto district views and selected surrounding markets. Keep groups, cityMarkets, surroundingMarkets and reportCities consistent.
+- Surrounding-city CBRE figures are separate from Colliers. askingSalePsf is ASKING, never a closed-sale average. Hamilton's figures are explicitly Greater Hamilton Area. Unverified municipal statistics remain unavailable, never inferred from a neighbour or region.
+- market-locations.js filters the crawlable server-generated city sections. Keep the print view complete.
+- Contact form: 7f41cd89-d316-4ce8-a651-9919b20b9810. Contact-inquiry.js renders the live schema and submits to private Wix Forms. It replaces the old download-only requirement brief; existing query links prefill city, transaction and size.
+- Notification automation 81366d74-d5ef-4dc0-92c3-144de096862b is platform-created, ACTIVE, typed recipient SITE_OWNER. Delivery to a specific inbox has not been independently confirmed.
+- Do not add contact inquirers to marketing without separate consent. Do not export PII into the repository.

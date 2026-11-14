@@ -2,11 +2,12 @@
 const formEl = document.querySelector('#quarterly-signup');
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 try {
-  const { createFormStore, FORM_ERROR } = await import('https://headless-jizhgzanvba-johnsonrob28-140c.wix-site-host.com/js/wix/form-store.js');
+  const { createFormStore, FORM_ERROR } = await import('./wix-form-store.js');
   const store = createFormStore({formId: '1c47d67d-e82a-45f3-9b03-a451d0e5eefe'});
   let signature = '';
   function render(s) {
     if (s.outcome) {
+      signature = "";
       formEl.innerHTML = '<h3>Thank you for subscribing.</h3><p role="status">'+esc(s.outcome.message || 'Your signup has been received.')+'</p><a class="text-link" href="market-update.html">Read the latest report →</a>';
       return;
     }

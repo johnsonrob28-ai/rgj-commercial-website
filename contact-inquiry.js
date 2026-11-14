@@ -27,7 +27,7 @@ try {
       return;
     }
     if (s.closed) {
-      formEl.innerHTML = '<p role="status">'+esc(s.form.disabledMessage || 'The inquiry form is currently unavailable. Please email or call Robert directly.')+'</p>';
+      formEl.innerHTML = '<p role="status">'+esc(s.form.disabledMessage || 'The inquiry form is currently unavailable. Please contact RGJ Commercial using the email or phone number on this page.')+'</p>';
       return;
     }
     if (!prefilled) {prefilled = true; prefill(s.form); s = store.getState();}
@@ -38,7 +38,8 @@ try {
       formEl.innerHTML = fields.map(f => {
         const id = 'signup-'+f.target;
         const attrs = ' id="'+esc(id)+'" name="'+esc(f.target)+'"'+(f.required?' required':'')+(f.readOnly?' disabled':'')+' aria-describedby="'+esc(id)+'-error"';
-        const label = esc(f.label)+(f.required?' *':'');
+        const brandLabels = {transaction: 'How can we help?', message: 'Tell us about your plans'};
+        const label = esc(brandLabels[f.target] || f.label)+(f.required?' *':'');
         let control;
         if (f.control === 'checkbox') control='<label class="consent-label" for="'+esc(id)+'"><input type="checkbox"'+attrs+'><span>'+label+'</span></label>';
         else {

@@ -14,7 +14,8 @@ end_date=date.fromisoformat(d['periodEnd'])
 period_label=f'{end_date.strftime("%B")} {end_date.day}, {end_date.year}'
 base=(root/'index.html').read_text()
 header=base[base.index('<header'):base.index('</header>')+9]
-header=header.replace('class="active"','').replace('<a href="insights.html">Insights</a>','<a href="market-update.html" aria-current="page">Market Update</a>')
+header=re.sub(r'\s+(?:class="active"|aria-current="page")', "", header)
+header=header.replace('<a href="insights.html">', '<a href="insights.html" class="active" aria-current="page">')
 footer=base[base.index('<footer'):base.index('</footer>')+9]
 source=f'<a href="{e(d["source"]["url"],quote=True)}" target="_blank" rel="noopener">Colliers · {e(d["quarter"])} · pages 1 &amp; 3 ↗</a>'
 def card(label,value,unit,note):

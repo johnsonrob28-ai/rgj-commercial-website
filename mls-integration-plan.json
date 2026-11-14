@@ -1,0 +1,48 @@
+{
+  "status": "not-connected",
+  "preferredProvider": "IDX Broker — commercial TRREB coverage requires confirmation",
+  "scope": "Toronto MLS / TRREB only",
+  "excluded": [
+    "CREA-wide feed",
+    "sold data",
+    "VOW"
+  ],
+  "filters": {
+    "cities": [
+      "Mississauga",
+      "Brampton",
+      "Oakville",
+      "Etobicoke",
+      "Burlington",
+      "Vaughan"
+    ],
+    "sizeBands": [
+      "10000-20000",
+      "20000-30000",
+      "30000-50000",
+      "50000-70000",
+      "70000-100000",
+      "100000-120000",
+      "120000-150000",
+      "150000-"
+    ],
+    "propertyType": "Industrial",
+    "transaction": [
+      "Sale",
+      "Lease"
+    ]
+  },
+  "activationRequirements": [
+    "Confirmed brokerage affiliation and authorization",
+    "Confirmed provider coverage for TRREB commercial industrial sale and lease listings",
+    "Approved PropTx IDX agreement and domain",
+    "Provider-issued integration URL or approved server-side API access",
+    "Required attribution, refresh, withdrawal and display rules confirmed",
+    "Verified contact inbox and working lead capture"
+  ],
+  "security": "Do not put MLS API credentials in browser code",
+  "sources": [
+    "https://webapp.proptx.ca/oas/common/IDX_Data_Feed.jsp",
+    "https://www.idxbroker.com/idx_boards"
+  ]
+}

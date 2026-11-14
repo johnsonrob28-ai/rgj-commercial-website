@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "provider": "IDX Broker",
+  "board": "TRREB / PropTx",
+  "approvedSearchUrl": "",
+  "allowEmbedding": false,
+  "brokerageApproved": false,
+  "commercialCoverageConfirmed": false,
+  "productionHostApproved": false
+}

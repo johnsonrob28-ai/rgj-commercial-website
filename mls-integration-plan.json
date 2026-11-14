@@ -44,5 +44,8 @@
   "sources": [
     "https://webapp.proptx.ca/oas/common/IDX_Data_Feed.jsp",
     "https://www.idxbroker.com/idx_boards"
-  ]
+  ],
+  "integrationMethod": "Provider-hosted search URL; iframe only if provider explicitly permits embedding",
+  "legacyFrame": "Do not use TRREB legacy IDX Frame: official page says it will be discontinued.",
+  "publicConfigFile": "idx-search-config.json"
 }

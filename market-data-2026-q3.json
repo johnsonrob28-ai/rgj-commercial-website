@@ -166,5 +166,136 @@
       "submarket": "Caledon",
       "averageSalePsf": 235.94
     }
+  ],
+  "cityMarkets": [
+    {
+      "city": "Mississauga",
+      "name": "Central East",
+      "rent": 15.92,
+      "availability": 3.8,
+      "vacancy": 2.3
+    },
+    {
+      "city": "Mississauga",
+      "name": "Central West",
+      "rent": 16.81,
+      "availability": 3.7,
+      "vacancy": 0.3
+    },
+    {
+      "city": "Mississauga",
+      "name": "East",
+      "rent": 16.25,
+      "availability": 2.4,
+      "vacancy": 0.2
+    },
+    {
+      "city": "Mississauga",
+      "name": "Meadowvale",
+      "rent": 15.81,
+      "availability": 4,
+      "vacancy": 0.7
+    },
+    {
+      "city": "Mississauga",
+      "name": "South / East",
+      "rent": 13.3,
+      "availability": 5.2,
+      "vacancy": 1.3
+    },
+    {
+      "city": "Mississauga",
+      "name": "South / West",
+      "rent": 19.11,
+      "availability": 5,
+      "vacancy": 4.3
+    },
+    {
+      "city": "Mississauga",
+      "name": "West",
+      "rent": 16.18,
+      "availability": 2.9,
+      "vacancy": 0.8
+    },
+    {
+      "city": "Brampton",
+      "name": "East",
+      "rent": 16.59,
+      "availability": 4.8,
+      "vacancy": 1.8
+    },
+    {
+      "city": "Brampton",
+      "name": "West",
+      "rent": 17.17,
+      "availability": 7.9,
+      "vacancy": 4.1
+    },
+    {
+      "city": "Oakville",
+      "name": "Oakville (excludes Winston Park)",
+      "rent": 17.22,
+      "availability": 3.4,
+      "vacancy": 2.4
+    },
+    {
+      "city": "Oakville",
+      "name": "Winston Park",
+      "rent": 16.31,
+      "availability": 5.5,
+      "vacancy": 4.5
+    },
+    {
+      "city": "Etobicoke",
+      "name": "North",
+      "rent": 13.66,
+      "availability": 5.6,
+      "vacancy": 2.7
+    },
+    {
+      "city": "Etobicoke",
+      "name": "South",
+      "rent": 15.55,
+      "availability": 3.6,
+      "vacancy": 2.8
+    },
+    {
+      "city": "Burlington",
+      "name": "Burlington",
+      "rent": 14.95,
+      "availability": 5,
+      "vacancy": 2.1
+    },
+    {
+      "city": "Vaughan",
+      "name": "Vaughan",
+      "rent": 17.51,
+      "availability": 4.1,
+      "vacancy": 2.6
+    },
+    {
+      "city": "Milton",
+      "name": "Milton",
+      "rent": 15.8,
+      "availability": 6.5,
+      "vacancy": 1.6
+    },
+    {
+      "city": "Caledon",
+      "name": "Caledon",
+      "rent": 16.49,
+      "availability": 4.4,
+      "vacancy": 3
+    }
+  ],
+  "reportCities": [
+    "Mississauga",
+    "Brampton",
+    "Oakville",
+    "Etobicoke",
+    "Burlington",
+    "Vaughan",
+    "Milton",
+    "Caledon"
   ]
 }

@@ -17,3 +17,14 @@ Use areaSales objects with area, submarket and averageSalePsf, drawn from the so
 ## Hosting and SEO
 
 The site remains a pre-launch GitHub Pages preview, noindex. Final domain, production host, correct canonical URLs across all pages, live lead routing and launch review remain outstanding. Quarterly tasks do not bypass publication/access permissions or automatically approve commercial data licensing.
+
+## Quarterly report and subscriptions
+- The renderer creates the latest `market-update.html` and `market-report-YYYY-qN.html` archive. Preserve previous archives.
+- Include local city sections from cityMarkets and reportCities. Verify every city record against the source, preserve submarket boundaries and unavailable values.
+- Branding inherits styles.css variables: charcoal #202328, copper #B17B56, ivory #F4F1ED, Orbitron monogram and Georgia/Playfair editorial headings.
+- subscribe.html renders the Wix schema through newsletter.js and official Wix form-store. No subscriber details or admin keys belong in GitHub.
+- Wix site c4cf1d64-759d-4e9e-870c-b9701bc61dec, form 1c47d67d-e82a-45f3-9b03-a451d0e5eefe. Four inputs including required, unchecked express email consent.
+- Admin submissions: https://manage.wix.com/dashboard/c4cf1d64-759d-4e9e-870c-b9701bc61dec/wix-forms/form/1c47d67d-e82a-45f3-9b03-a451d0e5eefe/submissions
+- Current verified sender: Robert Johnson, Sales Representative, Lennard Commercial Realty, Brokerage; rjohnson@lennard.com; 209-1 Yorkdale Road, Toronto ON M6A 3A1. Source: https://www.lennard.com/people/robert-johnson and https://www.lennard.com/contact (checked Nov 14 2026).
+- Email distribution is NOT configured. Prepare a campaign draft only. Before any campaign, configure/verify sender and sending platform, include functional unsubscribe and sender address, exclude suppressed contacts, process withdrawal requests and obtain explicit send authorization. Do not invent account capability or send via unrelated third parties.
+- Consent is specific to quarterly reports. Brokerage changes require reviewing sender identification, data permissions and consent scope; do not silently transfer records.

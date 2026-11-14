@@ -78,46 +78,93 @@
       "vacancy": 2.6
     }
   ],
-  "sizeBands": [
-    [
-      10000,
-      20000
-    ],
-    [
-      20000,
-      30000
-    ],
-    [
-      30000,
-      50000
-    ],
-    [
-      50000,
-      70000
-    ],
-    [
-      70000,
-      100000
-    ],
-    [
-      100000,
-      120000
-    ],
-    [
-      120000,
-      150000
-    ],
-    [
-      150000,
-      null
-    ]
-  ],
-  "sizeBandSales": null,
   "crosscheck": {
     "publisher": "CBRE",
     "quarter": "Q3 2026",
     "availability": 5.0,
     "url": "https://www.cbre.ca/insights/figures/toronto-industrial-figures",
     "note": "Different tracked inventory and methodology; do not combine with the Colliers series."
-  }
+  },
+  "areaSales": [
+    {
+      "area": "Mississauga",
+      "submarket": "Central East",
+      "averageSalePsf": 319.77
+    },
+    {
+      "area": "Mississauga",
+      "submarket": "Central West",
+      "averageSalePsf": 490.21
+    },
+    {
+      "area": "Mississauga",
+      "submarket": "East",
+      "averageSalePsf": 354.4
+    },
+    {
+      "area": "Mississauga",
+      "submarket": "Meadowvale",
+      "averageSalePsf": 135.36
+    },
+    {
+      "area": "Mississauga",
+      "submarket": "South / East",
+      "averageSalePsf": 368.04
+    },
+    {
+      "area": "Mississauga",
+      "submarket": "South / West",
+      "averageSalePsf": 534.09
+    },
+    {
+      "area": "Mississauga",
+      "submarket": "West",
+      "averageSalePsf": 294.62
+    },
+    {
+      "area": "Brampton",
+      "submarket": "East",
+      "averageSalePsf": 338.07
+    },
+    {
+      "area": "Brampton",
+      "submarket": "West",
+      "averageSalePsf": 224.02
+    },
+    {
+      "area": "Etobicoke",
+      "submarket": "North",
+      "averageSalePsf": 327.37
+    },
+    {
+      "area": "Etobicoke",
+      "submarket": "South",
+      "averageSalePsf": 419.93
+    },
+    {
+      "area": "Oakville",
+      "submarket": "Oakville (excludes Winston Park)",
+      "averageSalePsf": 316.43
+    },
+    {
+      "area": "Burlington",
+      "submarket": "Burlington",
+      "averageSalePsf": 314.63
+    },
+    {
+      "area": "Vaughan",
+      "submarket": "Vaughan",
+      "averageSalePsf": 335.47
+    },
+    {
+      "area": "Milton",
+      "submarket": "Milton",
+      "averageSalePsf": 500.0
+    },
+    {
+      "area": "Caledon",
+      "submarket": "Caledon",
+      "averageSalePsf": 235.94
+    }
+  ]
 }

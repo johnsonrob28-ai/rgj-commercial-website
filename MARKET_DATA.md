@@ -10,15 +10,9 @@ Current dashboard: market-update.html. Entry point: Insights. Renderer: render-m
 6. Verify numeric units and source values, table completeness, responsive display, links and generator output. Commit the JSON, generator and generated HTML. The repository's current Pages deployment follows main.
 7. Notify Rob with source links and changes. If publication access or new reports are unavailable, leave the prior verified quarter and date unchanged and report the blocker.
 
-## Size-band closed sales
+## Average sale prices by area
 
-No authorized closed-sale dataset has been connected. The current bands are unavailable, not zero.
-
-An active listing/IDX feed must not be assumed to include sold data or analytics publication rights. Obtain a permission-cleared closed-sale export or Lennard research figures before computing band statistics. Require verified closed date, price, building area, geography, property type and ownership. Exclude duplicates, land, portfolio/partial-interest allocations without defensible building prices; keep sale-leasebacks and condo/freehold cohorts separate. Document exclusions and coverage, transaction count, dates and ownership type alongside every published cohort.
-
-For each band: average sale price = sum(price)/count; weighted PSF = sum(price)/sum(building_sf). Suppress price outputs for fewer than five qualifying sales. Do not average area-weighted city rents or prices without the appropriate denominators. Do not split a public report's broader bands into narrower bands by interpolation.
-
-To add verified calculations, populate sizeBandSales with objects containing minSf, maxSf, count, averageSalePrice, weightedPsf; also update the rendered methodology to name the dataset, permissions, cohort and exclusions. Current null means unpopulated; never publish calculated values without provenance.
+Use areaSales objects with area, submarket and averageSalePsf, drawn from the source report’s average-sale-price PSF column. Keep Mississauga, Brampton and Etobicoke reporting subdivisions as published. Do not average submarket averages to invent citywide values. Missing source values stay unavailable. Display CAD/SF, source/quarter and transaction-mix caveats; do not call these average total building prices or asking prices. Keep all size-band sale tables removed unless Rob explicitly requests them again.
 
 ## Hosting and SEO
 

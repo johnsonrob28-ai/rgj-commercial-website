@@ -800,11 +800,42 @@
   },
   "coverageVerifiedOn": "2026-11-14",
   "marketNotes": {
-    "Toronto": "These published submarkets cover different parts of the city. The row labelled Toronto is the publisher\u2019s narrower submarket, not a citywide average. Toronto district sections below repeat their relevant submarkets for easier browsing.",
-    "Etobicoke": "A Toronto district, shown separately for local property searches. North and South are the publisher\u2019s submarkets.",
+    "Toronto": "These published submarkets cover different parts of the city. The row labelled Toronto is the publisher’s narrower submarket, not a citywide average. Toronto district sections below repeat their relevant submarkets for easier browsing.",
+    "Etobicoke": "A Toronto district, shown separately for local property searches. North and South are the publisher’s submarkets.",
     "North York": "A Toronto district. Selected published submarkets are shown separately; these figures do not create a district-wide average.",
-    "Scarborough": "A Toronto district. East, South and West retain the publisher\u2019s reporting boundaries.",
+    "Scarborough": "A Toronto district. East, South and West retain the publisher’s reporting boundaries.",
     "Markham": "East and West Markham are distinct reporting submarkets. Missing sale-price values are unavailable, not zero.",
-    "Hamilton": "Figures are for the publisher\u2019s Greater Hamilton Area reporting market. They are not a Hamilton-city-only estimate."
+    "Hamilton": "Figures are for the publisher’s Greater Hamilton Area reporting market. They are not a Hamilton-city-only estimate."
+  },
+  "industrialCapRates": {
+    "quarter": "Q3 2026",
+    "geography": "Toronto reporting market",
+    "measure": "Published industrial investment cap-rate ranges",
+    "transactionAverage": null,
+    "verifiedOn": "2026-11-14",
+    "source": {
+      "publisher": "Colliers",
+      "title": "Canada Cap Rate Report Q3 2026",
+      "published": "2026-10-22",
+      "url": "https://www.collierscanada.com/en-ca/research/canada-cap-rate-report-q3-2026",
+      "pdfUrl": "https://www.collierscanada.com/-/media/files/canada/research/2026/national/q3-cap-rate-report-2026-en-v2.ashx?sc_lang=en-ca",
+      "page": 5
+    },
+    "classes": [
+      {
+        "name": "Class A industrial",
+        "low": 5.25,
+        "high": 6.0,
+        "rangeMidpoint": 5.63
+      },
+      {
+        "name": "Class B industrial",
+        "low": 5.5,
+        "high": 6.25,
+        "rangeMidpoint": 5.88
+      }
+    ],
+    "midpointMethod": "Arithmetic midpoint of each published range, rounded half up to two decimals. Not an observed or transaction-weighted average.",
+    "municipalRatesAvailable": false
   }
 }

@@ -36,3 +36,13 @@ The site remains a pre-launch GitHub Pages preview, noindex. Final domain, produ
 - Contact form: 7f41cd89-d316-4ce8-a651-9919b20b9810. Contact-inquiry.js renders the live schema and submits to private Wix Forms. It replaces the old download-only requirement brief; existing query links prefill city, transaction and size.
 - Notification automation 81366d74-d5ef-4dc0-92c3-144de096862b is platform-created, ACTIVE, typed recipient SITE_OWNER. Delivery to a specific inbox has not been independently confirmed.
 - Do not add contact inquirers to marketing without separate consent. Do not export PII into the repository.
+
+
+## Industrial investment cap rates — Insights
+- Added Q3 2026 Toronto-market Colliers industrial ranges, page 5: Class A 5.25–6.00%; Class B 5.50–6.25%.
+- Source: https://www.collierscanada.com/en-ca/research/canada-cap-rate-report-q3-2026
+- Original PDF: https://www.collierscanada.com/-/media/files/canada/research/2026/national/q3-cap-rate-report-2026-en-v2.ashx?sc_lang=en-ca
+- Published 2026-10-22; verified 2026-11-14.
+- Calculated range midpoints: 5.63% and 5.88% (half-up rounding). These are NOT actual-sale averages. No verified transaction average or municipal cap-rate series is supplied. Do not relabel midpoints as average sale cap rates.
+- Stored under industrialCapRates in market-data-2026-q3.json; displayed in insights.html with insights.css.
+- Future quarterly refreshes must verify the same publisher/geography/class definitions, update both the structured data and Insights section, and preserve archives. Do not relabel older cap-rate data when updating a newer leasing quarter.

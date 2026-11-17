@@ -31,6 +31,10 @@ export async function handle(request,env=process.env,fetcher=fetch){
  if(request.method!=='GET')return json({error:'Method not allowed'},405);
  if(!env.PROPTX_TOKEN)return json({status:'not-configured',error:'Live search is not connected yet. Please contact RGJ Commercial.'},503);
  const params=new URL(request.url).searchParams;
+ if(params.get('check')==='schema'){
+  try{const r=await fetcher('https://query.ampre.ca/odata/$metadata',{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/xml'},signal:AbortSignal.timeout(12000)});if(!r.ok)throw Error();const xml=await r.text();const types=[...xml.matchAll(/<EntityType Name="(Property|Media)"[\s\S]*?<\/EntityType>/g)].map(m=>({entity:m[1],fields:[...m[0].matchAll(/<Property Name="([^"]+)" Type="([^"]+)"/g)].filter(x=>m[1]==='Media'||/Clear|Height|Shipping|Media|Photo/i.test(x[1])).map(x=>({name:x[1],type:x[2]}))}));return json({types});}catch{return json({error:'Schema unavailable'},502)}
+ }
+
  let query;try{query=queryFor(params)}catch{return json({error:'Choose a supported city, transaction, size range and page.'},400)}
  try{
   let r=await fetcher(BASE+'?'+query.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});

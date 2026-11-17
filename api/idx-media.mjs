@@ -11,3 +11,8 @@ export async function loadPhotos(key,env,fetcher=fetch){
  }
  return photosFrom(rows);
 }
+export async function loadCoverPhotos(keys,env,fetcher=fetch){
+ if(!keys.length)return new Map();
+ const q=new URLSearchParams({'$filter':"ResourceName eq 'Property' and MediaType eq 'image/jpeg' and Order le 1 and ("+keys.map(k=>"ResourceRecordKey eq '"+k.replaceAll("'","''")+"'").join(' or ')+')','$select':'ResourceRecordKey,MediaURL,MediaType,Order','$top':'1000'});
+ const r=await fetcher('https://query.ampre.ca/odata/Media?'+q.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(8000)});if(!r.ok)throw Error('Cover photos unavailable');const data=await r.json();if(!Array.isArray(data.value))throw Error('Invalid media response');const result=new Map();for(const key of keys){const photos=photosFrom(data.value.filter(m=>m.ResourceRecordKey===key));if(photos.length)result.set(key,photos[0].url);}return result;
+}

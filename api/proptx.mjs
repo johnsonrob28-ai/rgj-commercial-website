@@ -1,5 +1,6 @@
 // Server-only PropTx IDX connector. Credentials are read only at runtime.
 import { createHash } from 'node:crypto';
+import {loadCoverPhotos} from './idx-media.mjs';
 const BASE='https://query.ampre.ca/odata/Property';
 export const CITIES=['Mississauga','Brampton','Oakville','Burlington','Vaughan','Etobicoke','Toronto','Ajax','Aurora','Bradford West Gwillimbury','Caledon','Cambridge','Clarington','East Gwillimbury','Georgina','Guelph','Halton Hills','Hamilton','King','Kitchener','Markham','Milton','New Tecumseth','Newmarket','Orangeville','Oshawa','Pickering','Richmond Hill','Scugog','Uxbridge','Waterloo','Whitby','Whitchurch-Stouffville'];
 const BANDS=['10000-20000','20000-30000','30000-50000','50000-70000','70000-100000','100000-120000','120000-150000','150000-'];
@@ -19,7 +20,7 @@ export function queryFor(p){
  if(min||max){filters.push("BuildingAreaUnits eq 'Square Feet'");if(min)filters.push(`BuildingAreaTotal ge ${Number(min)}`);if(max)filters.push(`BuildingAreaTotal le ${Number(max)}`);}
  if(p.get('height')){const height=Number(p.get('height')),feet=Math.floor(height),inches=Math.ceil((height-feet)*12-1e-8);filters.push(inches?`(ClearHeightFeet gt ${feet} or (ClearHeightFeet eq ${feet} and ClearHeightInches ge ${inches}))`:`ClearHeightFeet ge ${feet}`);}
  if(p.get('truck'))filters.push(`TruckLevelShippingDoors ge ${Number(p.get('truck'))}`);if(p.get('drive'))filters.push(`DriveInLevelShippingDoors ge ${Number(p.get('drive'))}`);
- return new URLSearchParams({'$filter':filters.map(s=>'('+s+')').join(' and '),'$top':'20','$skip':String((page-1)*20),'$select':'ListingKey,UnparsedAddress,City,TransactionType,BuildingAreaTotal,BuildingAreaUnits,ListPrice,ListPriceUnit,ListOfficeName,ModificationTimestamp,InternetAddressDisplayYN,InternetEntireListingDisplayYN,StandardStatus,PropertySubType,ClearHeightFeet,ClearHeightInches,TruckLevelShippingDoors,DriveInLevelShippingDoors','$expand':"Media($select=MediaURL,MediaType,Order;$filter=MediaType eq 'image/jpeg';$orderby=Order;$top=1)",'$orderby':'ModificationTimestamp desc,ListingKey desc'});
+ return new URLSearchParams({'$filter':filters.map(s=>'('+s+')').join(' and '),'$top':'20','$skip':String((page-1)*20),'$select':'ListingKey,UnparsedAddress,City,TransactionType,BuildingAreaTotal,BuildingAreaUnits,ListPrice,ListPriceUnit,ListOfficeName,ModificationTimestamp,InternetAddressDisplayYN,InternetEntireListingDisplayYN,StandardStatus,PropertySubType,ClearHeightFeet,ClearHeightInches,TruckLevelShippingDoors,DriveInLevelShippingDoors','$orderby':'ModificationTimestamp desc,ListingKey desc'});
 }
 export function normalize(x){
  if(x.StandardStatus!=='Active'||x.PropertySubType!=='Industrial'||x.InternetEntireListingDisplayYN!==true||!['For Sale','For Lease'].includes(x.TransactionType)||!x.ListOfficeName)return null;
@@ -40,6 +41,7 @@ export async function handle(request,env=process.env,fetcher=fetch){
   if(!r.ok){console.error('proptx_upstream_status',r.status);return json({error:'Property search is temporarily unavailable. Please contact RGJ Commercial.',...(params.get('check')==='1'?{upstreamStatus:r.status}:{} )},502)}
   const data=await r.json();if(!Array.isArray(data.value))throw Error('Unexpected response');
   const rows=data.value.slice(0,20),listings=rows.map(normalize).filter(Boolean);
+  try{const covers=await loadCoverPhotos(listings.filter(x=>x.address).map(x=>x.key),env,fetcher);for(const listing of listings)if(listing.address)listing.image=covers.get(listing.key)||null;}catch{console.info('idx_cover_photos_unavailable');}
   const page=Number(params.get('page')||1);
   // Pseudonymous access trail, with no token, listing content or consumer contact data.
   const ip=request.headers.get('x-forwarded-for')?.split(',')[0]||'unknown';

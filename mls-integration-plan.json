@@ -1,6 +1,6 @@
 {
-  "status": "not-connected",
-  "preferredProvider": "IDX Broker — commercial TRREB coverage requires confirmation",
+  "status": "direct-integration",
+  "preferredProvider": "PropTx direct RESO Web API",
   "scope": "Toronto MLS / TRREB only",
   "excluded": [
     "CREA-wide feed",
@@ -42,10 +42,11 @@
   ],
   "security": "Do not put MLS API credentials in browser code",
   "sources": [
-    "https://webapp.proptx.ca/oas/common/IDX_Data_Feed.jsp",
-    "https://www.idxbroker.com/idx_boards"
+    "https://developer.ampre.us/docs/getting-started",
+    "https://developer.ampre.us/docs/query-options"
   ],
-  "integrationMethod": "Provider-hosted search URL; iframe only if provider explicitly permits embedding",
+  "integrationMethod": "Server-only Vercel function",
   "legacyFrame": "Do not use TRREB legacy IDX Frame: official page says it will be discontinued.",
-  "publicConfigFile": "idx-search-config.json"
+  "publicConfigFile": "idx-search-config.json",
+  "agreementId": "1890001"
 }

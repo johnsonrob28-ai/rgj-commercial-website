@@ -12,7 +12,7 @@ export function queryFor(p){
  const filters=["StandardStatus eq 'Active'","PropertySubType eq 'Industrial'","InternetEntireListingDisplayYN eq true","(TransactionType eq 'For Sale' or TransactionType eq 'For Lease')",'('+CITIES.map(cityFilter).join(' or ')+')'];
  if(city)filters.push(cityFilter(city));if(deal)filters.push(`TransactionType eq '${deal==='Sale'?'For Sale':'For Lease'}'`);
  if(size){const [min,max]=size.split('-');filters.push("BuildingAreaUnits eq 'Square Feet'",`BuildingAreaTotal ge ${min}`);if(max)filters.push(`BuildingAreaTotal lt ${max}`);}
- return new URLSearchParams({'$filter':filters.map(s=>'('+s+')').join(' and '),'$top':'20','$skip':String((page-1)*20),'$select':'ListingKey,UnparsedAddress,City,TransactionType,BuildingAreaTotal,BuildingAreaUnits,ListPrice,ListPriceUnit,ListOfficeName,ModificationTimestamp,InternetAddressDisplayYN,InternetEntireListingDisplayYN,StandardStatus,PropertySubType','$orderby':'ModificationTimestamp desc,ListingKey desc','$expand':"Media($select=MediaURL,MediaType;$filter=MediaType eq 'image/jpeg';$top=1)"});
+ return new URLSearchParams({'$filter':filters.map(s=>'('+s+')').join(' and '),'$top':'20','$skip':String((page-1)*20),'$select':'ListingKey,UnparsedAddress,City,TransactionType,BuildingAreaTotal,BuildingAreaUnits,ListPrice,ListPriceUnit,ListOfficeName,ModificationTimestamp,InternetAddressDisplayYN,InternetEntireListingDisplayYN,StandardStatus,PropertySubType','$orderby':'ModificationTimestamp desc,ListingKey desc'});
 }
 export function normalize(x){
  if(x.StandardStatus!=='Active'||x.PropertySubType!=='Industrial'||x.InternetEntireListingDisplayYN!==true||!['For Sale','For Lease'].includes(x.TransactionType)||!x.ListOfficeName)return null;
@@ -30,7 +30,6 @@ export async function handle(request,env=process.env,fetcher=fetch){
  let query;try{query=queryFor(params)}catch{return json({error:'Choose a supported city, transaction, size range and page.'},400)}
  try{
   let r=await fetcher(BASE+'?'+query.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});
-  if(r.status===400){query.delete('$expand');r=await fetcher(BASE+'?'+query.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});}
   if(!r.ok){console.error('proptx_upstream_status',r.status);return json({error:'Property search is temporarily unavailable. Please contact RGJ Commercial.',...(params.get('check')==='1'?{upstreamStatus:r.status}:{} )},502)}
   const data=await r.json();if(!Array.isArray(data.value))throw Error('Unexpected response');
   const rows=data.value.slice(0,20),listings=rows.map(normalize).filter(Boolean);

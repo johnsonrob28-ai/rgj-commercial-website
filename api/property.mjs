@@ -1,4 +1,5 @@
 import {queryFor,normalize} from './proptx.mjs';
+import {loadPhotos} from './idx-media.mjs';
 // Explicit public field allowlist: never pass raw MLS records or private remarks to the browser.
 const GROUPS={
  'Building & space':[['BuildingAreaTotal','Listed building / space area','BuildingAreaUnits'],['IndustrialArea','Industrial area','IndustrialAreaCode'],['OfficeApartmentArea','Office / apartment area','OfficeApartmentAreaUnit'],['RetailArea','Retail area','RetailAreaCode'],['ClearHeight','Clear height'],['ClearHeightFeet','Clear height (feet)'],['ClearHeightInches','Clear height (inches)'],['CeilingHeight','Ceiling height'],['TruckLevelShippingDoors','Truck-level doors'],['TruckLevelShippingDoorsWidth','Truck-level door width'],['TruckLevelShippingDoorsHeight','Truck-level door height'],['DriveInLevelShippingDoors','Drive-in doors'],['DriveInLevelShippingDoorsWidth','Drive-in door width'],['DriveInLevelShippingDoorsHeight','Drive-in door height'],['DoubleManShippingDoors','Double-man doors'],['GradeLevelShippingDoors','Grade-level doors'],['Rail','Rail access'],['Amps','Electrical service (amps)'],['Volts','Electrical service (volts)'],['HeatType','Heating'],['Cooling','Cooling'],['Sprinklers','Sprinklers'],['ElevatorType','Elevator'],['YearBuilt','Year built'],['PropertyUse','Property use'],['BusinessType','Business type'],['PropertyFeatures','Features']],
@@ -19,13 +20,15 @@ export async function handle(request,env=process.env,fetcher=fetch){
  if(!key||!/^[A-Za-z0-9_-]{1,80}$/.test(key)||[...p.keys()].some(k=>!['listing','check'].includes(k)||p.getAll(k).length!==1))return json({error:'Choose a valid listing.'},400);
  if(!env.PROPTX_TOKEN)return json({error:'Property details are not connected yet. Please contact RGJ Commercial.'},503);
  try{
-  const q=queryFor(new URLSearchParams());q.set('$top','1');q.delete('$skip');q.delete('$select');q.delete('$orderby');q.set('$filter',q.get('$filter')+` and (ListingKey eq '${key}')`);
+  const q=queryFor(new URLSearchParams());q.set('$top','1');q.delete('$skip');q.delete('$select');q.delete('$orderby');q.delete('$expand');q.set('$filter',q.get('$filter')+` and (ListingKey eq '${key}')`);
   const r=await fetcher('https://query.ampre.ca/odata/Property?'+q.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});
   if(!r.ok)return json({error:'Property details are temporarily unavailable. Please try again or contact RGJ Commercial.'},502);
   const data=await r.json();if(!Array.isArray(data.value))throw Error();
   const listing=data.value[0]?.ListingKey===key?detail(data.value[0]):null;
   if(!listing)return json({error:'This listing is no longer available in the active public feed. Contact RGJ Commercial for current options.'},404);
-  if(p.get('check')==='1')return json({status:'connected',hasSpecifications:listing.sections.some(s=>s.rows.length>0),sectionCounts:listing.sections.map(s=>s.rows.length),hasPrice:listing.price!==null,hasBrokerage:!!listing.brokerage,addressHidden:!listing.address});
+  listing.photos=[];listing.photoStatus='available';
+  if(data.value[0].InternetAddressDisplayYN===true){try{listing.photos=await loadPhotos(key,env,fetcher);}catch{listing.photoStatus='unavailable';}}
+  if(p.get('check')==='1')return json({status:'connected',photoCount:listing.photos.length,photoStatus:listing.photoStatus,hasSpecifications:listing.sections.some(s=>s.rows.length>0),sectionCounts:listing.sections.map(s=>s.rows.length),hasPrice:listing.price!==null,hasBrokerage:!!listing.brokerage,addressHidden:!listing.address});
   return json({status:'connected',listing,checkedAt:new Date().toISOString()});
  }catch{return json({error:'Property details are temporarily unavailable. Please contact RGJ Commercial.'},502)}
 }

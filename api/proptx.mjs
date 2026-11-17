@@ -6,12 +6,16 @@ const BANDS=['10000-20000','20000-30000','30000-50000','50000-70000','70000-1000
 const quote=s=>"'"+s.replaceAll("'","''")+"'";
 const cityFilter=city=>city==='Etobicoke'?"(City eq 'Etobicoke' or City eq 'Toronto W06' or City eq 'Toronto W07' or City eq 'Toronto W08' or City eq 'Toronto W09' or City eq 'Toronto W10' or (City eq 'Toronto' and CityRegion eq 'Etobicoke'))":city==='Toronto'?"(City eq 'Toronto' or startswith(City,'Toronto '))":`City eq ${quote(city)}`;
 export function queryFor(p){
- for(const key of p.keys())if(!['city','deal','size','page','check'].includes(key)||p.getAll(key).length!==1)throw Error('Invalid filter');
+ for(const key of p.keys())if(!['city','deal','size','min','max','page','check'].includes(key)||p.getAll(key).length!==1)throw Error('Invalid filter');
  const city=p.get('city')||'',deal=p.get('deal')||'',size=p.get('size')||'',page=Number(p.get('page')||1);
  if(city&&!CITIES.includes(city)||deal&&!['Sale','Lease'].includes(deal)||size&&!BANDS.includes(size)||!Number.isInteger(page)||page<1||page>5)throw Error('Invalid filter');
+ const min=p.get('min')||'',max=p.get('max')||'';
+ for(const n of [min,max])if(n&&(!/^\d+(\.\d{1,2})?$/.test(n)||Number(n)>100000000))throw Error('Invalid size');
+ if(size&&(min||max)||min&&max&&Number(min)>Number(max))throw Error('Invalid size');
  const filters=["StandardStatus eq 'Active'","PropertySubType eq 'Industrial'","InternetEntireListingDisplayYN eq true","(TransactionType eq 'For Sale' or TransactionType eq 'For Lease')",'('+CITIES.map(cityFilter).join(' or ')+')'];
  if(city)filters.push(cityFilter(city));if(deal)filters.push(`TransactionType eq '${deal==='Sale'?'For Sale':'For Lease'}'`);
  if(size){const [min,max]=size.split('-');filters.push("BuildingAreaUnits eq 'Square Feet'",`BuildingAreaTotal ge ${min}`);if(max)filters.push(`BuildingAreaTotal lt ${max}`);}
+ if(min||max){filters.push("BuildingAreaUnits eq 'Square Feet'");if(min)filters.push(`BuildingAreaTotal ge ${Number(min)}`);if(max)filters.push(`BuildingAreaTotal le ${Number(max)}`);}
  return new URLSearchParams({'$filter':filters.map(s=>'('+s+')').join(' and '),'$top':'20','$skip':String((page-1)*20),'$select':'ListingKey,UnparsedAddress,City,TransactionType,BuildingAreaTotal,BuildingAreaUnits,ListPrice,ListPriceUnit,ListOfficeName,ModificationTimestamp,InternetAddressDisplayYN,InternetEntireListingDisplayYN,StandardStatus,PropertySubType','$orderby':'ModificationTimestamp desc,ListingKey desc'});
 }
 export function normalize(x){
@@ -38,7 +42,7 @@ export async function handle(request,env=process.env,fetcher=fetch){
   const ip=request.headers.get('x-forwarded-for')?.split(',')[0]||'unknown';
   const viewer=createHash('sha256').update(new Date().toISOString().slice(0,10)+ip).digest('hex').slice(0,16);
   console.info(JSON.stringify({event:'idx_search',viewer,page,city:params.get('city')||'',deal:params.get('deal')||'',size:params.get('size')||'',returned:listings.length}));
-  if(params.get('check')==='1')return json({status:'connected',returned:rows.length,displayable:listings.length,withPhotos:listings.filter(x=>x.image).length,allActive:rows.every(x=>x.StandardStatus==='Active'),allIndustrial:rows.every(x=>x.PropertySubType==='Industrial'),allBrokerage:rows.every(x=>!!x.ListOfficeName),sizeUnits:rows.every(x=>x.BuildingAreaUnits==='Square Feet'),withinSize:rows.every(x=>{if(!params.get('size'))return true;const[a,b]=params.get('size').split('-').map(Number);return x.BuildingAreaTotal>=a&&(!b||x.BuildingAreaTotal<b)}),hasMore:rows.length===20&&page<5});
+  if(params.get('check')==='1')return json({status:'connected',returned:rows.length,displayable:listings.length,withPhotos:listings.filter(x=>x.image).length,allActive:rows.every(x=>x.StandardStatus==='Active'),allIndustrial:rows.every(x=>x.PropertySubType==='Industrial'),allBrokerage:rows.every(x=>!!x.ListOfficeName),sizeUnits:rows.every(x=>x.BuildingAreaUnits==='Square Feet'),withinSize:rows.every(x=>{if(params.has('min')||params.has('max'))return (!params.get('min')||x.BuildingAreaTotal>=Number(params.get('min')))&&(!params.get('max')||x.BuildingAreaTotal<=Number(params.get('max')));if(!params.get('size'))return true;const[a,b]=params.get('size').split('-').map(Number);return x.BuildingAreaTotal>=a&&(!b||x.BuildingAreaTotal<b)}),hasMore:rows.length===20&&page<5});
   return json({status:'connected',listings,hasMore:rows.length===20&&page<5,checkedAt:new Date().toISOString()});
  }catch{console.error('proptx_request_failed');return json({error:'Property search is temporarily unavailable. Please contact RGJ Commercial.'},502)}
 }

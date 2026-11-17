@@ -13,9 +13,10 @@
     const price=x.price===null?'Contact for asking price':new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:2}).format(x.price);
     meta.append(el('span',price+(x.priceUnit?' · '+x.priceUnit:'')));copy.append(meta);
     copy.append(el('p','Listed by: '+x.brokerage,'listing-brokerage'),el('p','MLS® '+x.key));
-    const link=el('a','Request details →','listing-inquiry');
-    const q=new URLSearchParams({city:x.city,address:x.address,type:'Industrial',deal:x.transaction==='For Sale'?'Sale':'Lease',message:`Please send details for MLS® ${x.key}${x.address?' — '+x.address:''}.`});
-    link.href='contact.html?'+q;copy.append(link);article.append(copy);return article;
+    const link=el('a','View property details →','listing-inquiry');
+    link.href='property.html?'+new URLSearchParams({listing:x.key,back:parameters().toString()});
+    copy.append(link);article.append(copy);article.classList.add('clickable-listing');
+    article.addEventListener('click',e=>{if(!e.target.closest('a')&&!window.getSelection()?.toString())link.click();});return article;
   }
   function parameters(){const q=new URLSearchParams(new FormData(form));for(const [k,v] of [...q])if(!v)q.delete(k);return q;}
   async function search(){
@@ -26,6 +27,7 @@
     try {
       const r=await fetch('/api/proptx?'+q,{cache:'no-store',signal:activeController.signal});const data=await r.json();
       if(!r.ok||data.status!=='connected')throw Error(data.error||'Live property search is being configured. Please contact RGJ Commercial for available properties.');
+      if(controller!==activeController)return;
       grid.replaceChildren(...data.listings.map(card));
       status.textContent=data.listings.length?`${data.listings.length} listings shown. Availability and asking terms must be confirmed.`:'No active listings match these criteria. Try another city or size range.';
       pageLabel.textContent='Page '+page;prev.disabled=page===1;next.disabled=!data.hasMore;
@@ -33,10 +35,14 @@
     } catch(e){if(e.name!=='AbortError' && controller===activeController){status.textContent=e.message;grid.replaceChildren();pageLabel.textContent='';}}
     finally{if(controller===activeController)grid.setAttribute('aria-busy','false');}
   }
-  form.addEventListener('submit',e=>{e.preventDefault();page=1;search();});
-  form.addEventListener('reset',()=>{page=1;setTimeout(search,0);});
+  form.addEventListener('submit',e=>{e.preventDefault();validateRange();if(!form.reportValidity())return;page=1;search();});
+  function validateRange(){const a=form.elements.min,b=form.elements.max;b.setCustomValidity(a.value&&b.value&&Number(a.value)>Number(b.value)?'Maximum size must be at least the minimum size.':'');}
+  form.elements.min.addEventListener('input',validateRange);form.elements.max.addEventListener('input',validateRange);
+  form.addEventListener('reset',()=>{page=1;form.elements.max.setCustomValidity('');setTimeout(search,0);});
   next.addEventListener('click',()=>{page++;search();});prev.addEventListener('click',()=>{page=Math.max(1,page-1);search();});
-  const initial=new URLSearchParams(location.search);for(const name of ['city','deal','size']){const field=form.elements.namedItem(name);if(initial.has(name)&&[...field.options].some(o=>o.value===initial.get(name)))field.value=initial.get(name);}
+  const initial=new URLSearchParams(location.search);for(const name of ['city','deal']){const field=form.elements.namedItem(name);if(initial.has(name)&&[...field.options].some(o=>o.value===initial.get(name)))field.value=initial.get(name);}
+  for(const name of ['min','max'])if(/^\d+(\.\d{1,2})?$/.test(initial.get(name)||''))form.elements.namedItem(name).value=initial.get(name);
+  if(initial.has('size')&&!initial.has('min')&&!initial.has('max')){const match=/^(\d+)-(\d*)$/.exec(initial.get('size'));if(match){form.elements.min.value=match[1];form.elements.max.value=match[2];}}
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')search();});
   setInterval(()=>{if(document.visibilityState==='visible')search();},15*60*1000);
   search();

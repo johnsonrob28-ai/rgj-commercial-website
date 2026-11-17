@@ -6,9 +6,11 @@ export async function schema(fetcher=fetch, token=process.env.PROPTX_TOKEN) {
   const entity=xml.match(/<EntityType\b[^>]*Name="Property"[\s\S]*?<\/EntityType>/)?.[0] || '';
   const fields=[...entity.matchAll(/<Property\b([^>]+)>?/g)].map(x=>({name:x[1].match(/Name="([^"]+)"/)?.[1],type:x[1].match(/Type="([^"]+)"/)?.[1]}));
   const enums=[...xml.matchAll(/<EnumType\b[^>]*Name="([^"]+)"[^>]*>([\s\S]*?)<\/EnumType>/g)].filter(x=>/Status|Property|Business|Area|Transaction|Sale|Lease/i.test(x[1])).map(x=>({name:x[1],values:[...x[2].matchAll(/<Member\b[^>]*Name="([^"]+)"/g)].map(y=>y[1])}));
-  const lookupQuery = new URLSearchParams({'$filter':"LookupName eq 'PropertySubType' or LookupName eq 'PropertyType' or LookupName eq 'TransactionType' or LookupName eq 'StandardStatus' or LookupName eq 'BuildingAreaUnits' or LookupName eq 'ListPriceUnit'"});
-  const lookupResponse = await fetcher(BASE+'Lookup?'+lookupQuery,{headers:{Authorization:'Bearer '+token,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});
-  const lookups = lookupResponse.ok ? (await lookupResponse.json()).value : {status:lookupResponse.status, detail:(await lookupResponse.text()).slice(0,2500)};
+  const lookups = await Promise.all(['PropertySubType','PropertyType','TransactionType','StandardStatus','BuildingAreaUnits','ListPriceUnit'].map(async name=>{
+    const q=new URLSearchParams({'$filter':`LookupName eq '${name}'`});
+    const r=await fetcher(BASE+'Lookup?'+q,{headers:{Authorization:'Bearer '+token,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});
+    return {name,status:r.status,result:r.ok?(await r.json()).value:(await r.text()).slice(0,500)};
+  }));
   return {lookups,fields:fields.filter(x=>/Status|Property|Business|Area|Transaction|Sale|Lease|City|Address|ListPrice|ListOffice|Modification|ListingKey|Originating|Internet|Media|Unit/i.test(x.name||'')),enums};
 }
 export default {async fetch(request){

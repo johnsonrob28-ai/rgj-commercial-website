@@ -36,13 +36,17 @@
     finally{if(controller===activeController)grid.setAttribute('aria-busy','false');}
   }
   form.addEventListener('submit',e=>{e.preventDefault();validateRange();if(!form.reportValidity())return;page=1;search();});
-  function validateRange(){const a=form.elements.min,b=form.elements.max;b.setCustomValidity(a.value&&b.value&&Number(a.value)>Number(b.value)?'Maximum size must be at least the minimum size.':'');}
-  form.elements.min.addEventListener('input',validateRange);form.elements.max.addEventListener('input',validateRange);
-  form.addEventListener('reset',()=>{page=1;form.elements.max.setCustomValidity('');setTimeout(search,0);});
+  function validateRange(){const a=form.elements.min,b=form.elements.max;a.setCustomValidity(Number(a.value)>100000000?'Enter a size up to 100,000,000 SF.':'');b.setCustomValidity(a.value&&b.value&&Number(a.value)>Number(b.value)?'Maximum size must be at least the minimum size.':Number(b.value)>100000000?'Enter a size up to 100,000,000 SF.':'');for(const name of ['height','truck','drive']){const f=form.elements.namedItem(name);f.setCustomValidity(f.value&&Number(f.value)>(name==='height'?1000:1000)?'Enter a value up to 1,000.':'');}}
+  for(const name of ['min','max','height','truck','drive'])form.elements.namedItem(name).addEventListener('input',validateRange);
+  const toggle=document.getElementById('extra-filter-toggle'),extra=document.getElementById('extra-filters');
+  function updateToggle(){const count=['height','truck','drive'].filter(n=>form.elements.namedItem(n).value!=='').length;toggle.textContent='Additional filters'+(count?' ('+count+')':'')+(extra.hidden?' +':' −');toggle.setAttribute('aria-expanded',String(!extra.hidden));}
+  toggle.addEventListener('click',()=>{extra.hidden=!extra.hidden;updateToggle();});extra.addEventListener('input',updateToggle);
+  form.addEventListener('reset',()=>{page=1;for(const name of ['min','max','height','truck','drive'])form.elements.namedItem(name).setCustomValidity('');setTimeout(()=>{extra.hidden=true;updateToggle();search();},0);});
   next.addEventListener('click',()=>{page++;search();});prev.addEventListener('click',()=>{page=Math.max(1,page-1);search();});
   const initial=new URLSearchParams(location.search);for(const name of ['city','deal']){const field=form.elements.namedItem(name);if(initial.has(name)&&[...field.options].some(o=>o.value===initial.get(name)))field.value=initial.get(name);}
-  for(const name of ['min','max'])if(/^\d+(\.\d{1,2})?$/.test(initial.get(name)||''))form.elements.namedItem(name).value=initial.get(name);
+  for(const name of ['min','max','height','truck','drive'])if(/^\d+(\.\d{1,2})?$/.test(initial.get(name)||''))form.elements.namedItem(name).value=initial.get(name);
   if(initial.has('size')&&!initial.has('min')&&!initial.has('max')){const match=/^(\d+)-(\d*)$/.exec(initial.get('size'));if(match){form.elements.min.value=match[1];form.elements.max.value=match[2];}}
+  if(['height','truck','drive'].some(n=>form.elements.namedItem(n).value!==''))extra.hidden=false;updateToggle();
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')search();});
   setInterval(()=>{if(document.visibilityState==='visible')search();},15*60*1000);
   search();

@@ -28,8 +28,8 @@ export async function handle(request,env=process.env,fetcher=fetch){
  const params=new URL(request.url).searchParams;
  let query;try{query=queryFor(params)}catch{return json({error:'Choose a supported city, transaction, size range and page.'},400)}
  try{
-  const r=await fetcher(BASE+'?'+query,{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});
-  if(!r.ok){console.error('proptx_upstream_status',r.status);return json({error:'Property search is temporarily unavailable. Please contact RGJ Commercial.',...(params.get('check')==='1'?{upstreamStatus:r.status}:{} )},502)}
+  const r=await fetcher(BASE+'?'+query.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});
+  if(!r.ok){console.error('proptx_upstream_status',r.status);return json({error:'Property search is temporarily unavailable. Please contact RGJ Commercial.',...(params.get('check')==='1'?{upstreamStatus:r.status,upstreamError:(await r.text()).slice(0,1200)}:{} )},502)}
   const data=await r.json();if(!Array.isArray(data.value))throw Error('Unexpected response');
   const rows=data.value.slice(0,20),listings=rows.map(normalize).filter(Boolean);
   const page=Number(params.get('page')||1);

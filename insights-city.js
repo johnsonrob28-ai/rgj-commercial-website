@@ -45,7 +45,7 @@
     const avail = avg(lease.map(x => x.availability));
     const caps = (data.industrialCapRates && data.industrialCapRates.classes) || [];
     const capRows = caps.map(c => `<div class="snapshot-cap-row"><span>${esc(c.name.replace(/ industrial$/i, ''))}</span><strong>${c.low.toFixed(2)}–${c.high.toFixed(2)}%</strong></div>`).join('');
-    const subs = many ? `<p class="city-intro">${esc(city)} figures average Colliers' published submarkets: ${lease.map(m => esc(m.name)).join(', ')}.</p>` : '';
+    const subs = many ? `<p class="city-intro">${esc(city)} figures average its submarkets: ${lease.map(m => esc(m.name)).join(', ')}.</p>` : '';
     panel.innerHTML = `<div class="city-head"><div class="eyebrow">${esc(data.quarter)} · ${esc(city)}</div><h2>${esc(city)} Industrial Market</h2></div>${subs}` +
       `<div class="snapshot-grid">` +
       card('Average sale price', sale != null ? `$${Math.round(sale).toLocaleString('en-CA')}<small> / SF</small>` : null, `CAD per building square foot<br>${basis(sales.length)}`) +
@@ -54,9 +54,7 @@
       card('Availability rate', avail != null ? pct(avail) : null, `Includes marketed occupied space<br>${basis(lease.length)}`) +
       `<article class="snapshot-card snapshot-cap"><h2>Industrial cap rates</h2>${capRows || NA}<p class="snapshot-description">Toronto investment market<br>Published GTA-wide; no city figure</p></article>` +
       `</div>` +
-      `<p class="snapshot-footnote">Source: <a href="${esc(data.source.url)}" target="_blank" rel="noopener">${esc(data.source.publisher)} · ${esc(data.source.title)}</a>${caps.length ? ` and <a href="${esc(data.industrialCapRates.source.url)}" target="_blank" rel="noopener">${esc(data.industrialCapRates.source.publisher)} · ${esc(data.industrialCapRates.source.title)}</a>` : ''}. ` +
-      (many ? 'City figures are simple averages of the published submarket figures, not a citywide figure published by Colliers. ' : '') +
-      `<a href="market-update.html#city-${slug(city)}">Full ${esc(city)} report →</a> · <a href="properties.html?city=${encodeURIComponent(city)}&type=Industrial">Search ${esc(city)} listings →</a></p>`;
+      `<p class="snapshot-footnote"><a href="market-update.html#city-${slug(city)}">Full ${esc(city)} report →</a> · <a href="properties.html?city=${encodeURIComponent(city)}&type=Industrial">Search ${esc(city)} listings →</a></p>`;
   }
 
   function select(city, push) {

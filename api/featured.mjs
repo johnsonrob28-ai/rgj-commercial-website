@@ -10,11 +10,11 @@ const TARGETS=[
 export const isFeatured=x=>typeof x.UnparsedAddress==='string'&&typeof x.ListOfficeName==='string'&&/\blennard\b/i.test(x.ListOfficeName)&&TARGETS.some(t=>t.match.test(x.UnparsedAddress));
 export function featuredQuery(){
  const q=queryFor(new URLSearchParams(),{allTypes:true});
- q.set('$filter',q.get('$filter')+" and contains(ListOfficeName,'Lennard') and ("+TARGETS.map(t=>"contains(UnparsedAddress,'"+t.address+"')").join(' or ')+')');
+ q.set('$filter',"StandardStatus eq 'Active' and InternetEntireListingDisplayYN eq true and contains(ListOfficeName,'Lennard') and ("+TARGETS.map(t=>"contains(UnparsedAddress,'"+t.address+"')").join(' or ')+')');
  return q;
 }
 export async function handle(request,env=process.env,fetcher=fetch){
- const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+ const json=(body,status=200)=>Response.json(body,{status,headers:{'Cache-Control':status===200&&Array.isArray(body.listings)?'public, max-age=0, s-maxage=300, stale-while-revalidate=60':'no-store','X-Content-Type-Options':'nosniff'}});
  const params=new URL(request.url).searchParams;
  if(request.method!=='GET')return json({error:'Method not allowed'},405);
  if([...params.keys()].some(k=>k!=='check'||params.getAll(k).length!==1)||params.has('check')&&params.get('check')!=='1')return json({error:'Invalid request'},400);

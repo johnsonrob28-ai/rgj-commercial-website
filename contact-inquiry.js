@@ -8,7 +8,7 @@ try {
   let prefilled = false;
   function prefill(form) {
     const params = new URLSearchParams(location.search);
-    const requested = {location: (params.get('address') || params.get('city') || '').slice(0,300), message: (params.get('message') || '').slice(0,2000), transaction: ({Sale:'Purchase',Lease:'Lease',Sell:'Sell',Purchase:'Purchase','Lease renewal':'Lease renewal'})[params.get('deal')] || ''};
+    const requested = {location: (params.get('address') || params.getAll('city').filter(Boolean).join(', ') || '').slice(0,300), message: (params.get('message') || '').slice(0,2000), transaction: ({Sale:'Purchase',Lease:'Lease',Sell:'Sell',Purchase:'Purchase','Lease renewal':'Lease renewal'})[params.get('deal')] || ''};
     const size = params.get('size');
     if (size) {
       const bands = {'10000-20000':'10,000–20,000 SF','20000-30000':'20,000–30,000 SF','30000-50000':'30,000–50,000 SF','50000-70000':'50,000–70,000 SF','70000-100000':'70,000–100,000 SF','100000-120000':'100,000–120,000 SF','120000-150000':'120,000–150,000 SF','150000-':'150,000+ SF'};

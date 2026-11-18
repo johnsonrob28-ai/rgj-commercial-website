@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {queryFor,normalize,handle} from './api/proptx.mjs';
 test('only supported filters and size bands can reach feed',()=>{
- for(const s of ['$filter=true','size=1-2','deal=Sold','page=6','city=Ottawa','city=Oakville&city=Vaughan'])assert.throws(()=>queryFor(new URLSearchParams(s)));
+ for(const s of ['$filter=true','size=1-2','deal=Sold','page=6','city=Ottawa'])assert.throws(()=>queryFor(new URLSearchParams(s)));
  const q=queryFor(new URLSearchParams('size=10000-20000&deal=Lease&city=Mississauga'));
  assert.match(q.get('$filter'),/BuildingAreaTotal ge 10000/);assert.match(q.get('$filter'),/BuildingAreaTotal lt 20000/);assert.doesNotMatch(q.get('$filter'),/LotSize/);
 });
@@ -36,4 +36,10 @@ test('gallery retains every unique HTTPS image in listing order and omits unsafe
 test('all gallery pages are read without forwarding credentials to foreign continuation URLs',async()=>{
  let calls=0;const env={PROPTX_TOKEN:'fixture'};const photos=await loadPhotos('fixture',env,async(url,options)=>{calls++;assert.equal(options.redirect,'error');assert.doesNotMatch(url,/\+/);return Response.json({value:[{MediaType:'image/jpeg',MediaURL:'https://example.com/'+calls+'.jpg',Order:calls}],...(calls===1?{'@odata.nextLink':'https://query.ampre.ca/odata/Media?$skip=1000'}:{})})});assert.equal(photos.length,2);assert.equal(calls,2);
  await assert.rejects(loadPhotos('fixture',env,async()=>Response.json({value:[],'@odata.nextLink':'https://other.example/steal'})));
+});
+
+test('multi-city queries OR cities together while keeping other restrictions ANDed',()=>{
+ const q=queryFor(new URLSearchParams('city=Mississauga&city=Brampton&city=Oakville&min=10000&max=50000&deal=Lease'));const f=q.get('$filter');assert.match(f,/City eq 'Mississauga' or City eq 'Brampton' or City eq 'Oakville'/);assert.match(f,/BuildingAreaTotal ge 10000/);assert.match(f,/TransactionType eq 'For Lease'/);assert.match(f,/StandardStatus eq 'Active'/);
+ for(const s of ['city=Oakville&city=Oakville','city=Oakville&city=Ottawa','city=Oakville&deal=Lease&deal=Sale','city=Toronto%27%20or%20true'])assert.throws(()=>queryFor(new URLSearchParams(s)));
+ assert.match(queryFor(new URLSearchParams('city=Toronto&city=Etobicoke')).get('$filter'),/Toronto W06/);
 });

@@ -41,9 +41,9 @@
   const toggle=document.getElementById('extra-filter-toggle'),extra=document.getElementById('extra-filters');
   function updateToggle(){const count=['height','truck','drive'].filter(n=>form.elements.namedItem(n).value!=='').length;toggle.textContent='Additional filters'+(count?' ('+count+')':'')+(extra.hidden?' +':' −');toggle.setAttribute('aria-expanded',String(!extra.hidden));}
   toggle.addEventListener('click',()=>{extra.hidden=!extra.hidden;updateToggle();});extra.addEventListener('input',updateToggle);
-  form.addEventListener('reset',()=>{page=1;for(const name of ['min','max','height','truck','drive'])form.elements.namedItem(name).setCustomValidity('');setTimeout(()=>{extra.hidden=true;updateToggle();search();},0);});
+  form.addEventListener('reset',()=>{page=1;for(const name of ['min','max','height','truck','drive'])form.elements.namedItem(name).setCustomValidity('');setTimeout(()=>{extra.hidden=true;updateToggle();window.RGJCityPicker?.reset();search();},0);});
   next.addEventListener('click',()=>{page++;search();});prev.addEventListener('click',()=>{page=Math.max(1,page-1);search();});
-  const initial=new URLSearchParams(location.search);for(const name of ['city','deal']){const field=form.elements.namedItem(name);if(initial.has(name)&&[...field.options].some(o=>o.value===initial.get(name)))field.value=initial.get(name);}
+  const initial=new URLSearchParams(location.search);for(const name of ['deal']){const field=form.elements.namedItem(name);if(initial.has(name)&&[...field.options].some(o=>o.value===initial.get(name)))field.value=initial.get(name);}
   for(const name of ['min','max','height','truck','drive'])if(/^\d+(\.\d{1,2})?$/.test(initial.get(name)||''))form.elements.namedItem(name).value=initial.get(name);
   if(initial.has('size')&&!initial.has('min')&&!initial.has('max')){const match=/^(\d+)-(\d*)$/.exec(initial.get('size'));if(match){form.elements.min.value=match[1];form.elements.max.value=match[2];}}
   if(['height','truck','drive'].some(n=>form.elements.namedItem(n).value!==''))extra.hidden=false;updateToggle();

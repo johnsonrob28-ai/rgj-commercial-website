@@ -3,7 +3,7 @@
 // Cities reported by several submarkets show a simple (unweighted) average of the published submarket
 // figures, at Rob's request (Nov 18, 2026). Each card says so; unpublished values are skipped, never zero.
 (function () {
-  const CITIES = ['Mississauga', 'Brampton', 'Etobicoke', 'Oakville', 'Burlington', 'Vaughan', 'North York', 'Caledon'];
+  const CITIES = ['Mississauga', 'Brampton', 'Etobicoke', 'Oakville', 'Burlington', 'Vaughan', 'North York', 'Caledon', 'Milton'];
   const bar = document.getElementById('city-filter');
   const gta = document.getElementById('gta-snapshot');
   const panel = document.getElementById('city-snapshot');

@@ -1,20 +1,16 @@
-// Server-only: feature the member's active, publicly displayable IDX listings.
+// Server-only IDX highlights, curated from the member's public Lennard listing page.
 import {queryFor,normalize} from './proptx.mjs';
 import {loadCoverPhotos} from './idx-media.mjs';
-const ORIGIN='https://query.ampre.ca/odata/';
-// Member identifier on RGJ Commercial's approved PropTx IDX agreement.
-const MEMBER_ID='9557174';
-export function agentFields(metadata){
- return [...metadata.matchAll(/<Property\b[^>]*>/g)].flatMap(([tag])=>{
-  const name=/\bName="([^"]+)"/.exec(tag)?.[1],type=/\bType="([^"]+)"/.exec(tag)?.[1];
-  return type==='Edm.String'&&/^(?:ListAgent|CoListAgent)\d*(?:Key|MlsId)\d*$/.test(name||'')?[name]:[];
- }).filter((name,i,all)=>all.indexOf(name)===i);
-}
-export function featuredQuery(fields){
- if(!fields.length||fields.some(f=>!/^(?:ListAgent|CoListAgent)\d*(?:Key|MlsId)\d*$/.test(f)))throw Error('Agent fields unavailable');
+// https://www.lennard.com/people/robert-johnson — verified 2026-11-18.
+// IDX omits agent identity fields; never substitute all brokerage listings.
+const TARGETS=[
+ {address:'18 Hedgedale',match:/\b18\s+hedgedale\b/i},
+ {address:'7429 Ninth',match:/\b7429\s+ninth\s+line\b/i}
+];
+export const isFeatured=x=>typeof x.UnparsedAddress==='string'&&typeof x.ListOfficeName==='string'&&/\blennard\b/i.test(x.ListOfficeName)&&TARGETS.some(t=>t.match.test(x.UnparsedAddress));
+export function featuredQuery(){
  const q=queryFor(new URLSearchParams(),{allTypes:true});
- q.set('$filter',q.get('$filter')+' and ('+fields.map(f=>`${f} eq '${MEMBER_ID}'`).join(' or ')+')');
- q.set('$select',q.get('$select')+','+fields.join(','));
+ q.set('$filter',q.get('$filter')+" and contains(ListOfficeName,'Lennard') and ("+TARGETS.map(t=>"contains(UnparsedAddress,'"+t.address+"')").join(' or ')+')');
  return q;
 }
 export async function handle(request,env=process.env,fetcher=fetch){
@@ -23,23 +19,12 @@ export async function handle(request,env=process.env,fetcher=fetch){
  if(request.method!=='GET')return json({error:'Method not allowed'},405);
  if([...params.keys()].some(k=>k!=='check'||params.getAll(k).length!==1)||params.has('check')&&params.get('check')!=='1')return json({error:'Invalid request'},400);
  if(!env.PROPTX_TOKEN)return json({error:'Featured listings are temporarily unavailable.'},503);
- const options={headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error'};
  try{
-  const schema=await fetcher(ORIGIN+'$metadata',{...options,headers:{...options.headers,Accept:'application/xml'},signal:AbortSignal.timeout(12000)});
-  if(!schema.ok)throw Error();
-  const xml=await schema.text();
-  if(params.has('check')){
-   const candidates=[['ListAgentKey',"ListAgentKey eq '9557174'"],['ListAgentFullName',"(ListAgentFullName eq 'Robert Johnson' or ListAgentFullName eq 'Rob Johnson')"],['CoListAgentFullName',"(CoListAgentFullName eq 'Robert Johnson' or CoListAgentFullName eq 'Rob Johnson')"],['ListAgentEmail',"ListAgentEmail eq 'rjohnson@lennard.com'"]];
-   const probes=await Promise.all(candidates.map(async([field,filter])=>{const q=queryFor(new URLSearchParams(),{allTypes:true});q.set('$filter',q.get('$filter')+' and ('+filter+')');q.set('$select','ListingKey');try{const r=await fetcher(ORIGIN+'Property?'+q.toString().replaceAll('+','%20'),{...options,signal:AbortSignal.timeout(25000)});const d=await r.json();return {field,status:r.status,count:Array.isArray(d.value)?d.value.length:null,reason:r.ok?'':String(d.error?.message||'').slice(0,300)};}catch{return {field,status:502};}}));return json({probes});
-  }
-  const fields=agentFields(xml).filter(f=>['ListAgentKey'].includes(f)),q=featuredQuery(fields);
-  const r=await fetcher(ORIGIN+'Property?'+q.toString().replaceAll('+','%20'),{...options,signal:AbortSignal.timeout(30000)});
-  if(!r.ok){let reason='';if(params.has('check')){try{reason=(await r.json())?.error?.message||'';}catch{}}return json({error:'Featured listings are temporarily unavailable.',...(params.has('check')?{upstreamStatus:r.status,agentFields:fields,reason:String(reason).slice(0,600)}: {})},502);}
+  const r=await fetcher('https://query.ampre.ca/odata/Property?'+featuredQuery().toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(30000)});
+  if(!r.ok)return json({error:'Featured listings are temporarily unavailable.',...(params.has('check')?{upstreamStatus:r.status}: {})},502);
   const data=await r.json();if(!Array.isArray(data.value))throw Error();
-  // Validate agent identity again before returning only approved public card fields.
-  const rows=data.value.slice(0,20),own=rows.filter(x=>fields.some(f=>x[f]===MEMBER_ID));
-  const listings=own.map(normalize).filter(Boolean);
-  if(params.has('check'))return json({status:'connected',agentFields:fields,returned:rows.length,displayable:listings.length,allOwn:rows.every(x=>fields.some(f=>x[f]===MEMBER_ID)),allActive:rows.every(x=>x.StandardStatus==='Active'),allPublic:rows.every(x=>x.InternetEntireListingDisplayYN===true)});
+  const rows=data.value.slice(0,20),listings=rows.filter(isFeatured).map(normalize).filter(Boolean);
+  if(params.has('check'))return json({status:'connected',returned:rows.length,displayable:listings.length,allCurated:rows.every(isFeatured),allActive:rows.every(x=>x.StandardStatus==='Active'),allPublic:rows.every(x=>x.InternetEntireListingDisplayYN===true)});
   try{const covers=await loadCoverPhotos(listings.filter(x=>x.address).map(x=>x.key),env,fetcher);for(const x of listings)if(x.address)x.image=covers.get(x.key)||null;}catch{console.info('featured_cover_photos_unavailable');}
   return json({status:'connected',listings,hasMore:rows.length===20,checkedAt:new Date().toISOString()});
  }catch{return json({error:'Featured listings are temporarily unavailable.'},502);}

@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
-# Pre-launch pages use noindex until brokerage details, domain and contact routing are confirmed.
+
+Sitemap: https://rgjcommercial.com/sitemap.xml

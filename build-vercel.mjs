@@ -9,7 +9,7 @@ const host = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL
 const siteUrl = process.env.SITE_URL || (host ? 'https://'+host : '');
 const dataFiles = new Set(['idx-search-config.json','market-current.json']);
 for (const name of await readdir(root)) {
-  if (!/\.(html|css|js|svg|png|jpe?g|webp|ico)$/i.test(name) && name !== 'robots.txt' && !dataFiles.has(name) && !/^market-data-\d{4}-q[1-4]\.json$/.test(name)) continue;
+  if (!/\.(html|css|js|svg|png|jpe?g|webp|ico)$/i.test(name) && name !== 'robots.txt' && name !== 'sitemap.xml' && !dataFiles.has(name) && !/^market-data-\d{4}-q[1-4]\.json$/.test(name)) continue;
   let content = await readFile(new URL(name,root));
   if (name.endsWith('.html') && siteUrl) {
     let html = content.toString('utf8');

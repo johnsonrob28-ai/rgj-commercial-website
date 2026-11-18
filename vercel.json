@@ -5,6 +5,14 @@
   "buildCommand": "node build-vercel.mjs",
   "outputDirectory": "dist",
   "headers": [
-    {"source": "/(.*)", "headers": [{"key": "X-Robots-Tag", "value": "noindex, follow"}]}
+    {
+      "source": "/property.html",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, follow"
+        }
+      ]
+    }
   ]
 }

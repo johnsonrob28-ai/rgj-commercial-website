@@ -7,7 +7,7 @@ Current dashboard: market-update.html. Entry point: Insights. Renderer: render-m
 3. Create a new market-data-YYYY-qN.json, retaining earlier files. Record source URL, publication, period-end and actual verification dates. Update market-current.json only after verification. Unknown values must remain unavailable, never zero or an old quarter's data under a new label.
 4. Update any period-specific commentary, comparisons and selected local-market caveats. Run python render-market.py. The resulting page includes numbers in HTML so it does not depend on a browser fetch for indexing.
 5. Keep source summaries brief; link original reports. Do not reproduce entire proprietary reports or charts. No affiliation with the research publisher is implied.
-6. Verify numeric units and source values, table completeness, responsive display, links and generator output. Commit the JSON, generator and generated HTML. The repository's current Pages deployment follows main.
+6. Verify numeric units and source values, table completeness, responsive display, links and generator output. Commit the JSON, generator and generated HTML. Vercel deploys main to rgjcommercial.com.
 7. Notify Rob with source links and changes. If publication access or new reports are unavailable, leave the prior verified quarter and date unchanged and report the blocker.
 
 ## Average sale prices by area
@@ -16,7 +16,7 @@ Use areaSales objects with area, submarket and averageSalePsf, drawn from the so
 
 ## Hosting and SEO
 
-The site remains a pre-launch GitHub Pages preview, noindex. Final domain, production host, correct canonical URLs across all pages, live lead routing and launch review remain outstanding. Quarterly tasks do not bypass publication/access permissions or automatically approve commercial data licensing.
+Launched November 18, 2026 on Vercel at https://rgjcommercial.com (deploys from main). Pages are indexable; canonicals point to rgjcommercial.com; sitemap.xml lists public pages (regenerate when pages are added). property.html stays noindex as a listing template. Quarterly tasks do not bypass publication/access permissions or automatically approve commercial data licensing.
 
 ## Quarterly report and subscriptions
 - The renderer creates the latest `market-update.html` and `market-report-YYYY-qN.html` archive. Preserve previous archives.

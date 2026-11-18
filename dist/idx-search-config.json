@@ -1,0 +1,10 @@
+{
+  "enabled": false,
+  "provider": "PropTx direct RESO Web API",
+  "board": "TRREB / PropTx",
+  "approvedSearchUrl": "",
+  "allowEmbedding": false,
+  "brokerageApproved": true,
+  "commercialCoverageConfirmed": true,
+  "productionHostApproved": true
+}

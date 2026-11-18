@@ -27,7 +27,7 @@ export async function handle(request,env=process.env,fetcher=fetch){
  try{
   const schema=await fetcher(ORIGIN+'$metadata',{...options,headers:{...options.headers,Accept:'application/xml'},signal:AbortSignal.timeout(12000)});
   if(!schema.ok)throw Error();
-  const fields=agentFields(await schema.text()),q=featuredQuery(fields);
+  const fields=agentFields(await schema.text()).filter(f=>['ListAgentKey','CoListAgentKey'].includes(f)),q=featuredQuery(fields);
   const r=await fetcher(ORIGIN+'Property?'+q.toString().replaceAll('+','%20'),{...options,signal:AbortSignal.timeout(30000)});
   if(!r.ok){let reason='';if(params.has('check')){try{reason=(await r.json())?.error?.message||'';}catch{}}return json({error:'Featured listings are temporarily unavailable.',...(params.has('check')?{upstreamStatus:r.status,agentFields:fields,reason:String(reason).slice(0,600)}: {})},502);}
   const data=await r.json();if(!Array.isArray(data.value))throw Error();

@@ -27,7 +27,12 @@ export async function handle(request,env=process.env,fetcher=fetch){
  try{
   const schema=await fetcher(ORIGIN+'$metadata',{...options,headers:{...options.headers,Accept:'application/xml'},signal:AbortSignal.timeout(12000)});
   if(!schema.ok)throw Error();
-  const fields=agentFields(await schema.text()).filter(f=>['ListAgentKey','CoListAgentKey'].includes(f)),q=featuredQuery(fields);
+  const xml=await schema.text();
+  if(params.has('check')){
+   const candidates=[['ListAgentKey',"ListAgentKey eq '9557174'"],['ListAgentFullName',"(ListAgentFullName eq 'Robert Johnson' or ListAgentFullName eq 'Rob Johnson')"],['CoListAgentFullName',"(CoListAgentFullName eq 'Robert Johnson' or CoListAgentFullName eq 'Rob Johnson')"],['ListAgentEmail',"ListAgentEmail eq 'rjohnson@lennard.com'"]];
+   const probes=await Promise.all(candidates.map(async([field,filter])=>{const q=queryFor(new URLSearchParams(),{allTypes:true});q.set('$filter',q.get('$filter')+' and ('+filter+')');q.set('$select','ListingKey');try{const r=await fetcher(ORIGIN+'Property?'+q.toString().replaceAll('+','%20'),{...options,signal:AbortSignal.timeout(25000)});const d=await r.json();return {field,status:r.status,count:Array.isArray(d.value)?d.value.length:null,reason:r.ok?'':String(d.error?.message||'').slice(0,300)};}catch{return {field,status:502};}}));return json({probes});
+  }
+  const fields=agentFields(xml).filter(f=>['ListAgentKey'].includes(f)),q=featuredQuery(fields);
   const r=await fetcher(ORIGIN+'Property?'+q.toString().replaceAll('+','%20'),{...options,signal:AbortSignal.timeout(30000)});
   if(!r.ok){let reason='';if(params.has('check')){try{reason=(await r.json())?.error?.message||'';}catch{}}return json({error:'Featured listings are temporarily unavailable.',...(params.has('check')?{upstreamStatus:r.status,agentFields:fields,reason:String(reason).slice(0,600)}: {})},502);}
   const data=await r.json();if(!Array.isArray(data.value))throw Error();

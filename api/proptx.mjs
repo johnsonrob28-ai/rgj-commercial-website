@@ -35,6 +35,10 @@ export async function handle(request,env=process.env,fetcher=fetch){
  if(request.method!=='GET')return json({error:'Method not allowed'},405);
  if(!env.PROPTX_TOKEN)return json({status:'not-configured',error:'Live search is not connected yet. Please contact RGJ Commercial.'},503);
  const params=new URL(request.url).searchParams;
+ if(params.get('check')==='lookups'){
+  try{const opts={headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)};const q=new URLSearchParams({'$filter':"LookupName eq 'PropertySubType' or LookupName eq 'TransactionType' or LookupName eq 'PropertyType' or LookupName eq 'LeaseType'"});const [lr,mr]=await Promise.all([fetcher('https://query.ampre.ca/odata/Lookup?'+q.toString().replaceAll('+','%20'),opts),fetcher('https://query.ampre.ca/odata/$metadata',{...opts,headers:{...opts.headers,Accept:'application/xml'}})]);if(!lr.ok||!mr.ok)throw Error();const data=await lr.json();return json({lookups:(data.value||[]).map(x=>Object.fromEntries(Object.entries(x).filter(([k])=>/Name|Value/.test(k)))),xml:await mr.text()});}catch{return json({error:'Metadata unavailable'},502)}
+ }
+
  let query;try{query=queryFor(params)}catch{return json({error:'Choose a supported city, transaction, size range and page.'},400)}
  try{
   let r=await fetcher(BASE+'?'+query.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});

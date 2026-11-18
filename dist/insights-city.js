@@ -1,6 +1,7 @@
 // City filter for the Market Insight snapshot. Reads the current verified quarter from market-current.json,
-// so it updates automatically when the quarterly data file changes. Shows published submarket figures only;
-// never averages submarkets into an invented citywide value.
+// so it updates automatically when the quarterly data file changes.
+// Cities reported by several submarkets show a simple (unweighted) average of the published submarket
+// figures, at Rob's request (Nov 18, 2026). Each card says so; unpublished values are skipped, never zero.
 (function () {
   const CITIES = ['Mississauga', 'Brampton', 'Etobicoke', 'Oakville', 'Burlington', 'Vaughan', 'North York', 'Caledon'];
   const bar = document.getElementById('city-filter');
@@ -15,12 +16,12 @@
   const NA = '<span class="city-na">Not published</span>';
 
   let data = null;
-  const buttons = ['All GTA', ...CITIES].map(name => {
+  const buttons = ['GTA', ...CITIES].map(name => {
     const b = document.createElement('button');
     b.type = 'button';
     b.className = 'city-btn';
     b.textContent = name;
-    b.dataset.city = name === 'All GTA' ? '' : name;
+    b.dataset.city = name === 'GTA' ? '' : name;
     b.setAttribute('aria-pressed', 'false');
     b.addEventListener('click', () => select(b.dataset.city, true));
     bar.appendChild(b);
@@ -31,28 +32,30 @@
     return `<article class="snapshot-card"><h2>${title}</h2><p class="snapshot-value">${value || NA}</p><p class="snapshot-description">${note}</p></article>`;
   }
 
+  const avg = xs => { const v = xs.filter(x => typeof x === 'number'); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null; };
+
   function render(city) {
     const lease = data.cityMarkets.filter(x => x.city === city);
-    const sales = data.areaSales.filter(x => x.area === city);
-    const saleFor = name => (sales.find(s => s.submarket === name) || {}).averageSalePsf;
-    const note = (data.marketNotes && data.marketNotes[city]) ? `<p class="city-note">${esc(data.marketNotes[city])}</p>` : '';
-    let body;
-    if (lease.length === 1) {
-      const m = lease[0];
-      const sale = saleFor(m.name) ?? (sales.length === 1 ? sales[0].averageSalePsf : undefined);
-      body = `<div class="snapshot-grid city-grid">` +
-        card('Average sale price', sale ? `${money(sale)}<small> / SF</small>` : null, 'Average sale price per building SF<br>CAD') +
-        card('Average net asking rent', m.rent ? `${money(m.rent)}<small> / SF</small>` : null, 'CAD / SF / year<br>Additional rent is extra') +
-        card('Vacancy rate', pct(m.vacancy), 'Vacant industrial space') +
-        card('Availability rate', pct(m.availability), 'Includes marketed occupied space') +
-        `</div>`;
-    } else {
-      const rows = lease.map(m => `<tr><th scope="row">${esc(m.name)}</th><td>${money(m.rent) || NA}</td><td>${pct(m.vacancy) || NA}</td><td>${pct(m.availability) || NA}</td><td>${money(saleFor(m.name)) || NA}</td></tr>`).join('');
-      body = `<p class="city-intro">${esc(city)} is reported by submarket. Figures are shown as published; they are not combined into a citywide average.</p>` +
-        `<div class="city-table-wrap"><table class="city-table"><thead><tr><th scope="col">Submarket</th><th scope="col">Net asking rent<br><small>CAD / SF / yr</small></th><th scope="col">Vacancy</th><th scope="col">Availability</th><th scope="col">Avg sale price<br><small>CAD / SF</small></th></tr></thead><tbody>${rows}</tbody></table></div>`;
-    }
-    panel.innerHTML = `<div class="city-head"><div class="eyebrow">${esc(data.quarter)} · ${esc(city)}</div><h2>${esc(city)} Industrial Market</h2></div>${body}${note}` +
-      `<p class="snapshot-footnote">Source: <a href="${esc(data.source.url)}" target="_blank" rel="noopener">${esc(data.source.publisher)} · ${esc(data.source.title)}</a>. Cap rates are published for the Toronto market only; select All GTA to view them. ` +
+    const sales = data.areaSales.filter(x => x.area === city && typeof x.averageSalePsf === 'number');
+    const many = lease.length > 1;
+    const basis = n => n > 1 ? `Average of ${n} published submarkets` : 'Published figure';
+    const sale = avg(sales.map(x => x.averageSalePsf));
+    const rent = avg(lease.map(x => x.rent));
+    const vac = avg(lease.map(x => x.vacancy));
+    const avail = avg(lease.map(x => x.availability));
+    const caps = (data.industrialCapRates && data.industrialCapRates.classes) || [];
+    const capRows = caps.map(c => `<div class="snapshot-cap-row"><span>${esc(c.name.replace(/ industrial$/i, ''))}</span><strong>${c.low.toFixed(2)}–${c.high.toFixed(2)}%</strong></div>`).join('');
+    const subs = many ? `<p class="city-intro">${esc(city)} figures average Colliers' published submarkets: ${lease.map(m => esc(m.name)).join(', ')}.</p>` : '';
+    panel.innerHTML = `<div class="city-head"><div class="eyebrow">${esc(data.quarter)} · ${esc(city)}</div><h2>${esc(city)} Industrial Market</h2></div>${subs}` +
+      `<div class="snapshot-grid">` +
+      card('Average sale price', sale != null ? `${money(sale)}<small> / SF</small>` : null, `CAD per building square foot<br>${basis(sales.length)}`) +
+      card('Average net asking rent', rent != null ? `${money(rent)}<small> / SF</small>` : null, `CAD / SF / year · additional rent is extra<br>${basis(lease.length)}`) +
+      card('Vacancy rate', vac != null ? pct(vac) : null, `Vacant industrial space<br>${basis(lease.length)}`) +
+      card('Availability rate', avail != null ? pct(avail) : null, `Includes marketed occupied space<br>${basis(lease.length)}`) +
+      `<article class="snapshot-card snapshot-cap"><h2>Industrial cap rates</h2>${capRows || NA}<p class="snapshot-description">Toronto investment market<br>Published GTA-wide; no city figure</p></article>` +
+      `</div>` +
+      `<p class="snapshot-footnote">Source: <a href="${esc(data.source.url)}" target="_blank" rel="noopener">${esc(data.source.publisher)} · ${esc(data.source.title)}</a>${caps.length ? ` and <a href="${esc(data.industrialCapRates.source.url)}" target="_blank" rel="noopener">${esc(data.industrialCapRates.source.publisher)} · ${esc(data.industrialCapRates.source.title)}</a>` : ''}. ` +
+      (many ? 'City figures are simple averages of the published submarket figures, not a citywide figure published by Colliers. ' : '') +
       `<a href="market-update.html#city-${slug(city)}">Full ${esc(city)} report →</a> · <a href="properties.html?city=${encodeURIComponent(city)}&type=Industrial">Search ${esc(city)} listings →</a></p>`;
   }
 

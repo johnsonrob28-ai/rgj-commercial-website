@@ -43,3 +43,10 @@ test('multi-city queries OR cities together while keeping other restrictions AND
  for(const s of ['city=Oakville&city=Oakville','city=Oakville&city=Ottawa','city=Oakville&deal=Lease&deal=Sale','city=Toronto%27%20or%20true'])assert.throws(()=>queryFor(new URLSearchParams(s)));
  assert.match(queryFor(new URLSearchParams('city=Toronto&city=Etobicoke')).get('$filter'),/Toronto W06/);
 });
+
+test('all supported property categories and subleases reach search and detail views',()=>{
+ for(const type of ['Industrial','Land','Investment']){assert.match(queryFor(new URLSearchParams({type})).get('$filter'),new RegExp("PropertySubType eq '"+type+"'"));assert.equal(normalize({...fixture,PropertySubType:type,TransactionType:'For Sub-Lease'}).type,type);assert.equal(detail({...fixture,PropertySubType:type,TransactionType:'For Sub-Lease'}).transactionLabel,'For sublease');}
+ assert.equal(normalize({...fixture,PropertySubType:'Office'}),null);assert.throws(()=>queryFor(new URLSearchParams('type=Office')));assert.throws(()=>queryFor(new URLSearchParams('type=Industrial&type=Land')));
+ const lease=queryFor(new URLSearchParams('deal=Lease')).get('$filter');assert.match(lease,/TransactionType eq 'For Lease' or TransactionType eq 'For Sub-Lease'/);
+ assert.match(queryFor(new URLSearchParams(),{allTypes:true}).get('$filter'),/PropertySubType eq 'Industrial' or PropertySubType eq 'Land' or PropertySubType eq 'Investment'/);
+});

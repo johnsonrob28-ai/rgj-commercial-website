@@ -43,7 +43,7 @@ export async function handle(request,env=process.env,fetcher=fetch){
  let query;try{query=queryFor(params)}catch{return json({error:'Choose a supported city, transaction, size range and page.'},400)}
  try{
   let r=await fetcher(BASE+'?'+query.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});
-  if(!r.ok){console.error('proptx_upstream_status',r.status);return json({error:'Property search is temporarily unavailable. Please contact RGJ Commercial.',...(params.get('check')==='1'?{upstreamStatus:r.status}:{} )},502)}
+  if(!r.ok){let upstreamMessage='';if(r.status===400){try{const e=await r.json();upstreamMessage=String(e.error?.message||e.message||'').replaceAll(env.PROPTX_TOKEN,'[redacted]').slice(0,1400);}catch{}}console.error('proptx_upstream_status',r.status);return json({error:'Property search is temporarily unavailable. Please contact RGJ Commercial.',...(params.get('check')==='1'?{upstreamStatus:r.status,upstreamMessage}:{} )},502)}
   const data=await r.json();if(!Array.isArray(data.value))throw Error('Unexpected response');
   const rows=data.value.slice(0,20),listings=rows.map(normalize).filter(Boolean);
   try{const covers=await loadCoverPhotos(listings.filter(x=>x.address).map(x=>x.key),env,fetcher);for(const listing of listings)if(listing.address)listing.image=covers.get(listing.key)||null;}catch{console.info('idx_cover_photos_unavailable');}

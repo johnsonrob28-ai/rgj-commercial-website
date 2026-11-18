@@ -29,7 +29,7 @@ export async function handle(request,env=process.env,fetcher=fetch){
   if(!schema.ok)throw Error();
   const fields=agentFields(await schema.text()),q=featuredQuery(fields);
   const r=await fetcher(ORIGIN+'Property?'+q.toString().replaceAll('+','%20'),{...options,signal:AbortSignal.timeout(30000)});
-  if(!r.ok)return json({error:'Featured listings are temporarily unavailable.',...(params.has('check')?{upstreamStatus:r.status,agentFields:fields}: {})},502);
+  if(!r.ok){let reason='';if(params.has('check')){try{reason=(await r.json())?.error?.message||'';}catch{}}return json({error:'Featured listings are temporarily unavailable.',...(params.has('check')?{upstreamStatus:r.status,agentFields:fields,reason:String(reason).slice(0,600)}: {})},502);}
   const data=await r.json();if(!Array.isArray(data.value))throw Error();
   // Validate agent identity again before returning only approved public card fields.
   const rows=data.value.slice(0,20),own=rows.filter(x=>fields.some(f=>x[f]===MEMBER_ID));

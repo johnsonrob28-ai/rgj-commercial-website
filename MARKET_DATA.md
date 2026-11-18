@@ -12,7 +12,7 @@ Current dashboard: market-update.html. Entry point: Insights. Renderer: render-m
 
 ## Average sale prices by area
 
-Use areaSales objects with area, submarket and averageSalePsf, drawn from the source report’s average-sale-price PSF column. Keep Mississauga, Brampton and Etobicoke reporting subdivisions as published. Do not average submarket averages to invent citywide values. Missing source values stay unavailable. Display CAD/SF, source/quarter and transaction-mix caveats; do not call these average total building prices or asking prices. Keep all size-band sale tables removed unless Rob explicitly requests them again.
+Use areaSales objects with area, submarket and averageSalePsf, drawn from the source report’s average-sale-price PSF column. Keep Mississauga, Brampton and Etobicoke reporting subdivisions as published. On the Market Insight city buttons only, cities reported by several submarkets show a simple unweighted average of the published submarket figures, at Rob's explicit request (Nov 18, 2026); the page labels them as averages of N submarkets. Do not present these averages as Colliers-published citywide figures, and do not use them elsewhere. Missing source values stay unavailable. Display CAD/SF, source/quarter and transaction-mix caveats; do not call these average total building prices or asking prices. Keep all size-band sale tables removed unless Rob explicitly requests them again.
 
 ## Hosting and SEO
 

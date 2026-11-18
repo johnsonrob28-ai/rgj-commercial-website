@@ -1,4 +1,4 @@
-import {queryFor,normalize} from './proptx.mjs';
+import {normalize} from './proptx.mjs';
 import {loadPhotos} from './idx-media.mjs';
 // Explicit public field allowlist: never pass raw MLS records or private remarks to the browser.
 const GROUPS={
@@ -20,7 +20,8 @@ export async function handle(request,env=process.env,fetcher=fetch){
  if(!key||!/^[A-Za-z0-9_-]{1,80}$/.test(key)||[...p.keys()].some(k=>!['listing','check'].includes(k)||p.getAll(k).length!==1))return json({error:'Choose a valid listing.'},400);
  if(!env.PROPTX_TOKEN)return json({error:'Property details are not connected yet. Please contact RGJ Commercial.'},503);
  try{
-  const q=queryFor(new URLSearchParams(),{allTypes:true});q.set('$top','1');q.delete('$skip');q.delete('$select');q.delete('$orderby');q.delete('$expand');q.set('$filter',q.get('$filter')+` and (ListingKey eq '${key}')`);
+  // Fetch only the requested active public record, then validate category, city and keyword eligibility locally.
+  const q=new URLSearchParams({'$filter':`ListingKey eq '${key}' and StandardStatus eq 'Active' and InternetEntireListingDisplayYN eq true`,'$top':'1'});
   const r=await fetcher('https://query.ampre.ca/odata/Property?'+q.toString().replaceAll('+','%20'),{headers:{Authorization:'Bearer '+env.PROPTX_TOKEN,Accept:'application/json'},redirect:'error',signal:AbortSignal.timeout(12000)});
   if(!r.ok)return json({error:'Property details are temporarily unavailable. Please try again or contact RGJ Commercial.'},502);
   const data=await r.json();if(!Array.isArray(data.value))throw Error();

@@ -48,7 +48,7 @@
     const subs = many ? `<p class="city-intro">${esc(city)} figures average Colliers' published submarkets: ${lease.map(m => esc(m.name)).join(', ')}.</p>` : '';
     panel.innerHTML = `<div class="city-head"><div class="eyebrow">${esc(data.quarter)} · ${esc(city)}</div><h2>${esc(city)} Industrial Market</h2></div>${subs}` +
       `<div class="snapshot-grid">` +
-      card('Average sale price', sale != null ? `${money(sale)}<small> / SF</small>` : null, `CAD per building square foot<br>${basis(sales.length)}`) +
+      card('Average sale price', sale != null ? `$${Math.round(sale).toLocaleString('en-CA')}<small> / SF</small>` : null, `CAD per building square foot<br>${basis(sales.length)}`) +
       card('Average net asking rent', rent != null ? `${money(rent)}<small> / SF</small>` : null, `CAD / SF / year · additional rent is extra<br>${basis(lease.length)}`) +
       card('Vacancy rate', vac != null ? pct(vac) : null, `Vacant industrial space<br>${basis(lease.length)}`) +
       card('Availability rate', avail != null ? pct(avail) : null, `Includes marketed occupied space<br>${basis(lease.length)}`) +

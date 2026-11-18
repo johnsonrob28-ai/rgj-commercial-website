@@ -66,3 +66,8 @@ test('Land ranges filter lot area in acres and convert supported feed units',()=
  const x=normalize({...fixture,PropertySubType:'Land',BuildingAreaTotal:99999,LotSizeArea:87120,LotSizeAreaUnits:'Square Feet'});assert.equal(x.area,2);assert.equal(x.areaUnits,'Acres');
  assert.doesNotThrow(()=>queryFor(new URLSearchParams('type=Land&min=0.1234')));assert.throws(()=>queryFor(new URLSearchParams('type=Industrial&min=0.1234')));assert.throws(()=>queryFor(new URLSearchParams('type=Land&size=10000-20000')));assert.throws(()=>queryFor(new URLSearchParams('type=Land&min=5&max=2')));
 });
+
+test('gallery selects the largest rendition once for each photo position',()=>{
+ const photos=photosFrom([{Order:1,MediaType:'image/jpeg',MediaURL:'https://example.com/1-small.jpg',ImageWidth:320,ImageHeight:200},{Order:1,MediaType:'image/jpeg',MediaURL:'https://example.com/1-large.jpg',ImageWidth:1600,ImageHeight:1000},{Order:2,MediaType:'image/jpeg',MediaURL:'https://example.com/2-medium.jpg',ImageSizeDescription:'Medium'},{Order:2,MediaType:'image/jpeg',MediaURL:'https://example.com/2-large.jpg',ImageSizeDescription:'Large'},{Order:3,MediaType:'image/jpeg',MediaURL:'https://example.com/3-only.jpg'}]);
+ assert.deepEqual(photos,[{url:'https://example.com/1-large.jpg'},{url:'https://example.com/2-large.jpg'},{url:'https://example.com/3-only.jpg'}]);
+});

@@ -6,7 +6,6 @@ const FIELDS = [
   ['rent', 'Net rent, year 1', 'decimal', 'e.g. 16.00', '$/SF/yr'],
   ['escalation', 'Annual rent increase', 'decimal', 'e.g. 3', null],
   ['tmi', 'Additional rent (TMI)', 'decimal', 'e.g. 4.75', '$/SF/yr'],
-  ['tmiGrowth', 'TMI annual increase', 'decimal', 'e.g. 3', '%'],
   ['term', 'Lease term', 'decimal', 'e.g. 5', 'years'],
   ['freeMonths', 'Free net rent', 'decimal', 'e.g. 3', 'months'],
   ['allowance', 'Landlord allowance', 'decimal', 'e.g. 2.00', '$/SF'],
@@ -16,8 +15,8 @@ const FIELDS = [
 const KEYS = [...FIELDS.map(f => f[0]), 'escalationType'];
 const LETTERS = ['A', 'B', 'C'];
 const EXAMPLE = [
-  { name: 'Current building (renewal)', size: '30,000', rent: '15.50', escalation: '3', escalationType: 'pct', tmi: '4.75', tmiGrowth: '3', term: '5', freeMonths: '0', allowance: '0', fitOut: '0', moving: '0' },
-  { name: 'Building B (relocation)', size: '30,000', rent: '16.25', escalation: '3', escalationType: 'pct', tmi: '4.25', tmiGrowth: '3', term: '5', freeMonths: '4', allowance: '2.00', fitOut: '60,000', moving: '75,000' },
+  { name: 'Current building (renewal)', size: '30,000', rent: '15.50', escalation: '3', escalationType: 'pct', tmi: '4.75', term: '5', freeMonths: '0', allowance: '0', fitOut: '0', moving: '0' },
+  { name: 'Building B (relocation)', size: '30,000', rent: '16.25', escalation: '3', escalationType: 'pct', tmi: '4.25', term: '5', freeMonths: '4', allowance: '2.00', fitOut: '60,000', moving: '75,000' },
   { name: '', escalationType: 'pct' },
 ];
 

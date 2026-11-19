@@ -46,7 +46,7 @@ try {
           control='<label for="'+esc(id)+'">'+label+'</label>';
           if (f.control === 'select') control+='<select'+attrs+'><option value="">Please select</option>'+f.choices.map(c=>'<option value="'+esc(c.value)+'">'+esc(c.label)+'</option>').join('')+'</select>';
           else if (f.control === 'textarea') control+='<textarea'+attrs+'></textarea>';
-          else if (f.target === 'location') control+='<input type="text"'+attrs+' autocomplete="street-address" list="address-suggestions" placeholder="Start typing an address"><datalist id="address-suggestions"></datalist><p class="address-help">Choose a suggestion or enter your address manually.</p>';
+          else if (f.target === 'location') control+='<input type="text"'+attrs+' autocomplete="off" placeholder="Start typing an address or street"><p class="address-help">Start typing, then pick the matching address from the list, or type it in yourself.</p>';
           else if (f.target === 'timing') control+='<input type="date"'+attrs+'>';
           else if (['text','email','phone','url','number','date'].includes(f.control)) control+='<input type="'+(f.control==='phone'?'tel':f.control)+'"'+attrs+' placeholder="'+esc(f.placeholder || '')+'">';
           else control+='<p>This field needs assistance. Please email us using the address below.</p>';
@@ -83,7 +83,7 @@ try {
   formEl.addEventListener('submit', e => store.submit(e));
   store.subscribe(render);
   render(store.getState());
-  const { enableAddressSuggestions } = await import('./address-suggestions.js');
+  const { enableAddressSuggestions } = await import('./address-suggestions.js?v=20261119-1');
   enableAddressSuggestions(formEl);
   store.start();
 } catch (error) {

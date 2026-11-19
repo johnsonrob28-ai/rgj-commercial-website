@@ -5,3 +5,5 @@
 .contact-hero h1 .brand-initials{display:inline-block;font-size:1em;margin-right:.08em}
 
 .contact-panel .address-help{font-size:11px;line-height:1.6;margin:7px 0 0;color:var(--slate)}.contact-panel input[type="date"]{min-height:46px;width:100%;color:var(--charcoal);color-scheme:light}
+
+.address-wrap{position:relative}.address-listbox{position:absolute;left:0;right:0;z-index:40;margin:4px 0 0;padding:4px 0;list-style:none;background:#fff;border:1px solid #d3c5b8;border-top:2px solid #B17B56;box-shadow:0 12px 26px rgba(32,35,40,.16);max-height:300px;overflow-y:auto}.address-listbox [role=option]{padding:11px 14px;font-size:15px;line-height:1.35;color:#202328;cursor:pointer}.address-listbox [role=option]:hover,.address-listbox [role=option][aria-selected=true]{background:#f4ede6;color:#202328}.address-listbox .address-credit{padding:6px 14px 4px;font-size:11px;color:#8a8f95;border-top:1px solid #eee6de;cursor:default}

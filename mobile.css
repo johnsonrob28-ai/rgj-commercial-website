@@ -7,3 +7,4 @@ html{scroll-padding-top:20px;-webkit-text-size-adjust:100%}body{min-width:0}img,
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
 
 @media(max-width:760px){.site-header nav .has-sub,.site-header nav .sub-menu{display:contents}.has-sub>a:after{display:none}.site-header nav .sub-menu a{display:flex;align-items:center;min-height:46px;padding:10px 0 10px 12px;font-size:13px;color:#d4cbc2;border-left:2px solid #B17B56;white-space:normal;background:none}}
+@media(max-width:760px){.site-header.menu-open nav{grid-template-columns:1fr;gap:0}.site-header nav>a,.site-header nav .has-sub>a{border-bottom:1px solid #ffffff14}.site-header nav .sub-menu a{min-height:40px;margin-left:4px;border-bottom:0}}

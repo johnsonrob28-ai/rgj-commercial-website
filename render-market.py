@@ -86,6 +86,26 @@ html=f'''<!doctype html><html lang="en-CA"><head><meta charset="utf-8"><meta nam
 <details><summary>How to read sale prices by area</summary><p>Sale prices are shown in CAD per building square foot using the publisher’s average-sale-price column. They are not average total purchase prices. Mississauga, Brampton and Etobicoke retain the publisher’s reporting subdivisions. Submarket averages are not combined into municipal averages without transaction weights.</p><p>A quarter with a different mix of condos, freehold buildings, investment properties or building sizes can produce a different average even when comparable property values have not moved. Compare the same geography and methodology over time, and use property-specific evidence for pricing decisions. A missing published value is unavailable, not zero.</p></details>
 <details><summary>Quarterly refresh policy</summary><p>Check for new reports after each quarter closes. Keep the last verified quarter visible until a newer source is verified; never relabel old numbers. Archive each quarter’s data and record its source, publication and verification dates. No live MLS feed is required for these public-report summaries.</p></details></section>
 <section class="market-cta"><h2>Receive the next quarterly report.</h2><p>Get the GTA overview and city-by-city industrial market update in your inbox.</p><a class="cta" href="subscribe.html">Subscribe to quarterly updates →</a><div class="report-actions"><button class="cta" onclick="window.print()">Print / save report as PDF</button><a href="market-report-{d['quarter'].split()[1]}-{d['quarter'].split()[0].lower()}.html">View this quarter’s archived report →</a></div><h2>Put the market in context for your building.</h2><p>Compare your location, building size and operational requirements with relevant property evidence.</p><a class="cta" href="contact.html">Discuss your property requirements →</a><p class="small">Submit your property requirements through the contact form, or call or email Robert directly.</p></section></section></main>{footer}<script src="market-locations.js?v=20261114-1" defer></script></body></html>'''
+
+# --- Sources live in one collapsed drawer at the bottom (Rob's request, Nov 18, 2026). ---
+import re as _re
+def tuck_sources(page):
+  page=_re.sub(r'<p class="source-line">.*?</p>','',page,flags=_re.S)
+  page=_re.sub(r'Source: (?:<a [^>]*>.*?</a>|[^.<]*?page \d+)\.\s*','',page)
+  page=_re.sub(r'\s+from (?:Colliers|CBRE)(?:, page \d+)?(?=[.,])','',page)
+  page=page.replace('Open a location for source-labelled figures or its current data-coverage status.','Open a location for its figures or current data-coverage status.')
+  page=page.replace('<p class="small"></p>','').replace(' in the verified source.','.')
+  page=_re.sub(r'<a [^>]*href="#methodology"[^>]*>[^<]*</a>','',page)
+  m=_re.search(r'<section id="methodology">.*?</section>\n',page,_re.S)
+  if m:
+    block=m.group(0).replace('<details open>','<details>')
+    block=block.replace('<section id="methodology">','<details class="sources-drawer" id="methodology"><summary>Sources &amp; methodology</summary><section>').replace('</section>\n','</section></details>')
+    page=page.replace(m.group(0),'')
+    page=page.replace('</section></section></main>','</section>'+block+'</section></main>',1)
+  style='<style>.sources-drawer{max-width:1180px;margin:40px auto 10px;border-top:1px solid #ded8d1;border-bottom:1px solid #ded8d1;padding:14px 0}.sources-drawer>summary{cursor:pointer;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#575D64;list-style:none}.sources-drawer>summary::-webkit-details-marker{display:none}.sources-drawer>summary::before{content:"\\25B8";display:inline-block;margin-right:8px;transition:transform .2s}.sources-drawer[open]>summary::before{transform:rotate(90deg)}.sources-drawer section{padding:18px 0 0;font-size:13px}.sources-drawer h2{font-size:20px}</style>'
+  page=page.replace('</head>',style+'</head>',1)
+  return page
+html=tuck_sources(html)
 (root/'market-update.html').write_text(html)
 archive='market-report-'+d['quarter'].split()[1]+'-'+d['quarter'].split()[0].lower()+'.html'
 (root/archive).write_text(html.replace('/market-update.html','/'+archive))

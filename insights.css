@@ -6,3 +6,4 @@
 
 
 .snapshot-title-row{display:flex;align-items:center;justify-content:space-between;gap:24px 40px;flex-wrap:wrap;max-width:1500px}.snapshot-title-row h1{margin-bottom:20px}.snapshot-hero-subscribe{margin-top:0;white-space:nowrap}.snapshot-shared{padding-top:0}.snapshot-shared .snapshot-report{max-width:1500px;margin-left:auto;margin-right:auto}
+.snapshot-methodology>summary{list-style:none;letter-spacing:.06em;text-transform:uppercase}.snapshot-methodology>summary::-webkit-details-marker{display:none}.snapshot-methodology>summary::before{content:"\25B8";display:inline-block;margin-right:8px;transition:transform .2s}.snapshot-methodology[open]>summary::before{transform:rotate(90deg)}
